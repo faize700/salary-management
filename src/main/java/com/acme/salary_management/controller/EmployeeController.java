@@ -2,6 +2,7 @@ package com.acme.salary_management.controller;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map; 
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +30,9 @@ public class EmployeeController {
     }
 
     @PostMapping("/{id}/adjust")
-    public void adjustSalary(@PathVariable Long id, @RequestBody BigDecimal adjustment) {
+    public void adjustSalary(@PathVariable Long id, @RequestBody Map<String, BigDecimal> payload) {
+        BigDecimal adjustment = payload.get("salary");
         service.adjustSalary(id, adjustment);
     }
+
 }
