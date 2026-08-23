@@ -1212,3 +1212,106 @@ select:focus-visible {
   }
 
 }
+
+/* ---------------------------------------------------------
+   Status Messages
+   --------------------------------------------------------- */
+
+.status-message {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin: 12px 24px 0;
+  padding: 10px 14px;
+
+  border-radius: 7px;
+
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.status-message span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 22px;
+  height: 22px;
+
+  border-radius: 50%;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.success-message {
+  background: #ecfdf3;
+  border: 1px solid #abefc6;
+  color: #027a48;
+}
+
+.success-message span {
+  background: #039855;
+  color: #ffffff;
+}
+
+.error-message {
+  background: #fef3f2;
+  border: 1px solid #fecdca;
+  color: #b42318;
+}
+
+.error-message span {
+  background: #d92d20;
+  color: #ffffff;
+}
+
+
+/* ---------------------------------------------------------
+   Loading
+   --------------------------------------------------------- */
+
+.loading-bar {
+  width: 100%;
+  height: 3px;
+
+  overflow: hidden;
+
+  background: #eaf2ff;
+}
+
+.loading-progress {
+  width: 35%;
+  height: 100%;
+
+  background: #155eef;
+
+  animation:
+    loading-animation 1.2s ease-in-out infinite;
+}
+
+@keyframes loading-animation {
+
+  0% {
+    transform: translateX(-120%);
+  }
+
+  50% {
+    transform: translateX(180%);
+  }
+
+  100% {
+    transform: translateX(300%);
+  }
+}
+
+
+/* ---------------------------------------------------------
+   Disabled state
+   --------------------------------------------------------- */
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

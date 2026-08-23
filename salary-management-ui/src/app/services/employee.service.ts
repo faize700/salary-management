@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Employee {
@@ -8,38 +8,144 @@ export interface Employee {
   department: string;
   country: string;
   salary: number;
-  adjustment: number;   // delta adjustment
-  newSalary: number;    // absolute update
+
+  // UI-only fields
+  adjustment: number;
+  newSalary: number;
 }
 
-@Injectable({ providedIn: 'root' })
+export interface EmployeePage {
+  content: Employee[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+  first: boolean;
+  last: boolean;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
 export class EmployeeService {
-  private apiUrl = 'http://localhost:8081/api/employees';
+
+  private readonly apiUrl =
+    'http://localhost:8081/api/employees';
 
   constructor(private http: HttpClient) {}
 
-  getEmployees(dept?: string): Observable<Employee[]> {
-    return this.http.get<Employee[]>(`${this.apiUrl}${dept ? '?dept=' + dept : ''}`);
-  }
+  /**
+   * Server-side employee search, filtering,
+   * pagination and sorting.
+   */
+  getEmployees(
+    page: number = 0,
+    size: number = 10,
+    search: string = '',
+    dept: string = '',
+    sortColumn: string = 'id',
+    sortDirection: string = 'asc'
+  ): Observable<EmployeePage> {
 
-  adjustSalary(id: number, adjustment: number): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/${id}/adjust`, { salary: adjustment });
-  }
+    let params = new HttpParams()
+      .set('page', page)
+      .set('size', size)
+      .set('sort', `${sortColumn},${sortDirection}`);
 
-  updateSalary(id: number, newSalary: number): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/${id}/update`, { salary: newSalary });
-  }
-
-  getAverageSalary(dept?: string): Observable<number> {
-    return this.http.get<number>(`${this.apiUrl}/report/average-salary${dept ? '?dept=' + dept : ''}`);
+    if (search.trim()) {
+      params = params.set('search', search.trim());
     }
 
-    getMinSalary(dept?: string): Observable<number> {
-    return this.http.get<number>(`${this.apiUrl}/report/min-salary${dept ? '?dept=' + dept : ''}`);
+    if (dept.trim()) {
+      params = params.set('dept', dept.trim());
     }
 
-    getMaxSalary(dept?: string): Observable<number> {
-    return this.http.get<number>(`${this.apiUrl}/report/max-salary${dept ? '?dept=' + dept : ''}`);
+    return this.http.get<EmployeePage>(
+      this.apiUrl,
+      { params }
+    );
+  }
+
+  /**
+   * Adjust salary by a delta amount.
+   */
+  adjustSalary(
+    id: number,
+    adjustment: number
+  ): Observable<Employee> {
+
+    return this.http.post<Employee>(
+      `${this.apiUrl}/${id}/adjust`,
+      {
+        salary: adjustment
+      }
+    );
+  }
+
+  /**
+   * Set salary to an absolute value.
+   */
+  updateSalary(
+    id: number,
+    newSalary: number
+  ): Observable<Employee> {
+
+    return this.http.post<Employee>(
+      `${this.apiUrl}/${id}/update`,
+      {
+        salary: newSalary
+      }
+    );
+  }
+
+  /**
+   * Salary analytics.
+   */
+  getAverageSalary(
+    dept?: string
+  ): Observable<number> {
+
+    let params = new HttpParams();
+
+    if (dept?.trim()) {
+      params = params.set('dept', dept.trim());
     }
-    
+
+    return this.http.get<number>(
+      `${this.apiUrl}/report/average-salary`,
+      { params }
+    );
+  }
+
+  getMinSalary(
+    dept?: string
+  ): Observable<number> {
+
+    let params = new HttpParams();
+
+    if (dept?.trim()) {
+      params = params.set('dept', dept.trim());
+    }
+
+    return this.http.get<number>(
+      `${this.apiUrl}/report/min-salary`,
+      { params }
+    );
+  }
+
+  getMaxSalary(
+    dept?: string
+  ): Observable<number> {
+
+    let params = new HttpParams();
+
+    if (dept?.trim()) {
+      params = params.set('dept', dept.trim());
+    }
+
+    return this.http.get<number>(
+      `${this.apiUrl}/report/max-salary`,
+      { params }
+    );
+  }
 }

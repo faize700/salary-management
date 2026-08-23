@@ -1,52 +1,100 @@
 <div class="employee-page">
 
-  <!-- Page Header -->
+  <!-- =====================================================
+       PAGE HEADER
+       ===================================================== -->
+
   <header class="page-header">
+
     <div class="header-content">
+
       <div class="header-icon">
         <span>₹</span>
       </div>
 
       <div>
         <h1>Employee Salary Management</h1>
-        <p>Manage employee compensation and salary insights</p>
+
+        <p>
+          Manage employee compensation and salary insights
+        </p>
       </div>
+
     </div>
+
   </header>
 
 
-  <!-- Salary Insights -->
+  <!-- =====================================================
+       SALARY INSIGHTS
+       ===================================================== -->
+
   <section class="insights-section">
 
     <div class="section-heading">
+
       <div>
+
         <h2>Salary Insights</h2>
-        <p>Overview of salary distribution across departments</p>
+
+        <p>
+          Overview of salary distribution across departments
+        </p>
+
       </div>
 
+
+      <!-- Department Filter -->
+
       <div class="department-filter">
-        <label for="dept">Department</label>
+
+        <label for="dept">
+          Department
+        </label>
 
         <select
           id="dept"
           [(ngModel)]="selectedDept"
-          (change)="loadReports()">
+          (change)="onDepartmentChange()">
 
-          <option value="">All Departments</option>
-          <option value="Sales">Sales</option>
-          <option value="Finance">Finance</option>
-          <option value="HR">HR</option>
-          <option value="Engineering">Engineering</option>
-          <option value="Marketing">Marketing</option>
+          <option value="">
+            All Departments
+          </option>
+
+          <option value="Sales">
+            Sales
+          </option>
+
+          <option value="Finance">
+            Finance
+          </option>
+
+          <option value="HR">
+            HR
+          </option>
+
+          <option value="Engineering">
+            Engineering
+          </option>
+
+          <option value="Marketing">
+            Marketing
+          </option>
 
         </select>
+
       </div>
+
     </div>
 
 
+    <!-- Report Cards -->
+
     <div class="report-cards">
 
-      <!-- Average -->
+
+      <!-- Average Salary -->
+
       <div class="report-card average-card">
 
         <div class="report-icon">
@@ -54,7 +102,10 @@
         </div>
 
         <div class="report-content">
-          <span class="report-label">Average Salary</span>
+
+          <span class="report-label">
+            Average Salary
+          </span>
 
           <strong>
             {{ averageSalary | currency:'USD':'symbol':'1.0-0' }}
@@ -63,12 +114,14 @@
           <span class="report-description">
             Current average compensation
           </span>
+
         </div>
 
       </div>
 
 
-      <!-- Minimum -->
+      <!-- Minimum Salary -->
+
       <div class="report-card minimum-card">
 
         <div class="report-icon">
@@ -76,7 +129,10 @@
         </div>
 
         <div class="report-content">
-          <span class="report-label">Minimum Salary</span>
+
+          <span class="report-label">
+            Minimum Salary
+          </span>
 
           <strong>
             {{ minSalary | currency:'USD':'symbol':'1.0-0' }}
@@ -85,12 +141,14 @@
           <span class="report-description">
             Lowest recorded salary
           </span>
+
         </div>
 
       </div>
 
 
-      <!-- Maximum -->
+      <!-- Maximum Salary -->
+
       <div class="report-card maximum-card">
 
         <div class="report-icon">
@@ -98,7 +156,10 @@
         </div>
 
         <div class="report-content">
-          <span class="report-label">Maximum Salary</span>
+
+          <span class="report-label">
+            Maximum Salary
+          </span>
 
           <strong>
             {{ maxSalary | currency:'USD':'symbol':'1.0-0' }}
@@ -107,6 +168,7 @@
           <span class="report-description">
             Highest recorded salary
           </span>
+
         </div>
 
       </div>
@@ -116,39 +178,100 @@
   </section>
 
 
-  <!-- Employee Management -->
+  <!-- =====================================================
+       EMPLOYEE MANAGEMENT
+       ===================================================== -->
+
   <section class="employee-section">
 
-    <!-- Section Header -->
+
+    <!-- ===================================================
+         SUCCESS / ERROR / LOADING
+         =================================================== -->
+
+    <div
+      *ngIf="successMessage"
+      class="status-message success-message">
+
+      <span>✓</span>
+
+      {{ successMessage }}
+
+    </div>
+
+
+    <div
+      *ngIf="errorMessage"
+      class="status-message error-message">
+
+      <span>!</span>
+
+      {{ errorMessage }}
+
+    </div>
+
+
+    <div
+      *ngIf="isLoading"
+      class="loading-bar">
+
+      <div class="loading-progress"></div>
+
+    </div>
+
+
+    <!-- ===================================================
+         EMPLOYEE HEADER
+         =================================================== -->
+
     <div class="employee-header">
 
+
+      <!-- Title -->
+
       <div class="section-title">
-        <h2>Employee List</h2>
+
+        <h2>
+          Employee List
+        </h2>
 
         <span class="employee-count">
-          {{ employees.length }} employees
+
+          {{ totalEmployees | number }}
+
+          employees
+
         </span>
+
       </div>
 
 
+      <!-- Search + Export -->
+
       <div class="table-actions">
 
+
         <!-- Search -->
+
         <div class="search-box">
 
-          <span class="search-icon">⌕</span>
+          <span class="search-icon">
+            ⌕
+          </span>
 
           <input
             type="text"
-            [(ngModel)]="searchTerm"
+            [ngModel]="searchTerm"
+            (ngModelChange)="onSearchChange($event)"
             placeholder="Search employees..."
             aria-label="Search employees">
+
 
           <button
             *ngIf="searchTerm"
             class="clear-search"
             type="button"
-            (click)="searchTerm = ''"
+            (click)="clearSearch()"
             aria-label="Clear search">
 
             ×
@@ -159,12 +282,17 @@
 
 
         <!-- Export -->
+
         <button
           class="export-btn"
           type="button"
+          [disabled]="isLoading"
           (click)="exportToCSV()">
 
-          <span class="export-icon">↓</span>
+          <span class="export-icon">
+            ↓
+          </span>
+
           Export CSV
 
         </button>
@@ -174,26 +302,38 @@
     </div>
 
 
-    <!-- Table -->
+    <!-- ===================================================
+         EMPLOYEE TABLE
+         =================================================== -->
+
     <div class="table-wrapper">
 
       <table class="employee-table">
+
+
+        <!-- TABLE HEADER -->
 
         <thead>
 
           <tr>
 
+
+            <!-- ID -->
+
             <th
               class="id-column"
               (click)="setSort('id')">
 
-              <span>ID</span>
+              <span>
+                ID
+              </span>
 
               <span
                 class="sort-indicator"
                 [class.active]="sortColumn === 'id'">
 
-                {{ sortColumn === 'id'
+                {{
+                  sortColumn === 'id'
                     ? (sortDirection === 'asc' ? '↑' : '↓')
                     : '↕'
                 }}
@@ -203,16 +343,21 @@
             </th>
 
 
+            <!-- Employee -->
+
             <th
               (click)="setSort('name')">
 
-              <span>Employee</span>
+              <span>
+                Employee
+              </span>
 
               <span
                 class="sort-indicator"
                 [class.active]="sortColumn === 'name'">
 
-                {{ sortColumn === 'name'
+                {{
+                  sortColumn === 'name'
                     ? (sortDirection === 'asc' ? '↑' : '↓')
                     : '↕'
                 }}
@@ -222,16 +367,21 @@
             </th>
 
 
+            <!-- Department -->
+
             <th
               (click)="setSort('department')">
 
-              <span>Department</span>
+              <span>
+                Department
+              </span>
 
               <span
                 class="sort-indicator"
                 [class.active]="sortColumn === 'department'">
 
-                {{ sortColumn === 'department'
+                {{
+                  sortColumn === 'department'
                     ? (sortDirection === 'asc' ? '↑' : '↓')
                     : '↕'
                 }}
@@ -241,16 +391,21 @@
             </th>
 
 
+            <!-- Country -->
+
             <th
               (click)="setSort('country')">
 
-              <span>Country</span>
+              <span>
+                Country
+              </span>
 
               <span
                 class="sort-indicator"
                 [class.active]="sortColumn === 'country'">
 
-                {{ sortColumn === 'country'
+                {{
+                  sortColumn === 'country'
                     ? (sortDirection === 'asc' ? '↑' : '↓')
                     : '↕'
                 }}
@@ -259,18 +414,23 @@
 
             </th>
 
+
+            <!-- Salary -->
 
             <th
               class="salary-column"
               (click)="setSort('salary')">
 
-              <span>Salary</span>
+              <span>
+                Salary
+              </span>
 
               <span
                 class="sort-indicator"
                 [class.active]="sortColumn === 'salary'">
 
-                {{ sortColumn === 'salary'
+                {{
+                  sortColumn === 'salary'
                     ? (sortDirection === 'asc' ? '↑' : '↓')
                     : '↕'
                 }}
@@ -280,8 +440,12 @@
             </th>
 
 
+            <!-- Actions -->
+
             <th class="actions-column">
+
               Actions
+
             </th>
 
           </tr>
@@ -289,29 +453,49 @@
         </thead>
 
 
+        <!-- =================================================
+             TABLE BODY
+             ================================================= -->
+
         <tbody>
+
 
           <tr
             *ngFor="let e of sortedEmployees"
             class="employee-row">
 
+
             <!-- ID -->
+
             <td class="employee-id">
+
               #{{ e.id }}
+
             </td>
 
 
             <!-- Employee -->
+
             <td>
 
               <div class="employee-info">
 
+
+                <!-- Avatar -->
+
                 <div class="avatar">
+
                   {{ e.name.charAt(0).toUpperCase() }}
+
                 </div>
 
+
+                <!-- Name -->
+
                 <div class="employee-name">
+
                   {{ e.name }}
+
                 </div>
 
               </div>
@@ -320,16 +504,28 @@
 
 
             <!-- Department -->
+
             <td>
 
               <span
                 class="department-badge"
                 [ngClass]="{
-                  'engineering': e.department === 'Engineering',
-                  'finance': e.department === 'Finance',
-                  'sales': e.department === 'Sales',
-                  'hr': e.department === 'HR',
-                  'marketing': e.department === 'Marketing'
+
+                  'engineering':
+                    e.department === 'Engineering',
+
+                  'finance':
+                    e.department === 'Finance',
+
+                  'sales':
+                    e.department === 'Sales',
+
+                  'hr':
+                    e.department === 'HR',
+
+                  'marketing':
+                    e.department === 'Marketing'
+
                 }">
 
                 {{ e.department }}
@@ -340,17 +536,24 @@
 
 
             <!-- Country -->
+
             <td>
 
               <div class="country-cell">
-                <span class="country-marker">●</span>
+
+                <span class="country-marker">
+                  ●
+                </span>
+
                 {{ e.country }}
+
               </div>
 
             </td>
 
 
             <!-- Salary -->
+
             <td class="salary-cell">
 
               {{ e.salary | currency:'USD':'symbol':'1.0-0' }}
@@ -358,24 +561,35 @@
             </td>
 
 
-            <!-- Actions -->
+            <!-- =================================================
+                 SALARY ACTIONS
+                 ================================================= -->
+
             <td>
 
               <div class="salary-actions">
 
-                <!-- Adjustment -->
+
+                <!-- Salary Adjustment -->
+
                 <div class="action-group">
 
                   <input
                     type="number"
                     [(ngModel)]="e.adjustment"
                     placeholder="Amount"
-                    class="salary-input">
+                    class="salary-input"
+                    [disabled]="isUpdating">
+
 
                   <button
                     type="button"
                     class="adjust-btn"
-                    (click)="adjustSalary(e.id, e.adjustment)">
+                    [disabled]="isUpdating"
+                    (click)="adjustSalary(
+                      e.id,
+                      e.adjustment
+                    )">
 
                     Adjust
 
@@ -384,19 +598,26 @@
                 </div>
 
 
-                <!-- Set Salary -->
+                <!-- Absolute Salary -->
+
                 <div class="action-group">
 
                   <input
                     type="number"
                     [(ngModel)]="e.newSalary"
                     placeholder="New salary"
-                    class="salary-input">
+                    class="salary-input"
+                    [disabled]="isUpdating">
+
 
                   <button
                     type="button"
                     class="set-btn"
-                    (click)="updateSalary(e.id, e.newSalary)">
+                    [disabled]="isUpdating"
+                    (click)="updateSalary(
+                      e.id,
+                      e.newSalary
+                    )">
 
                     Set Salary
 
@@ -411,26 +632,44 @@
           </tr>
 
 
-          <!-- Empty State -->
-          <tr *ngIf="sortedEmployees.length === 0">
+          <!-- =================================================
+               EMPTY STATE
+               ================================================= -->
+
+          <tr
+            *ngIf="
+              !isLoading &&
+              sortedEmployees.length === 0
+            ">
 
             <td
               colspan="6"
               class="empty-state">
 
+
               <div class="empty-icon">
+
                 ⌕
+
               </div>
 
-              <h3>No employees found</h3>
+
+              <h3>
+                No employees found
+              </h3>
+
 
               <p>
-                Try changing your search or filter criteria.
+
+                Try changing your search
+                or filter criteria.
+
               </p>
 
             </td>
 
           </tr>
+
 
         </tbody>
 
@@ -439,28 +678,56 @@
     </div>
 
 
-    <!-- Table Footer -->
+    <!-- =====================================================
+         TABLE FOOTER
+         ===================================================== -->
+
     <div class="table-footer">
+
+
+      <!-- Summary -->
 
       <div class="table-summary">
 
         Showing
-        <strong>{{ sortedEmployees.length }}</strong>
+
+        <strong>
+          {{ firstDisplayedEmployee }}
+        </strong>
+
+        –
+
+        <strong>
+          {{ lastDisplayedEmployee }}
+        </strong>
+
         of
-        <strong>{{ employees.length }}</strong>
+
+        <strong>
+          {{ totalEmployees | number }}
+        </strong>
+
         employees
 
       </div>
 
 
+      <!-- Paginator -->
+
       <mat-paginator
-        [length]="employees.length"
+
+        [length]="totalEmployees"
+
         [pageSize]="pageSize"
+
         [pageIndex]="pageIndex"
+
         [pageSizeOptions]="[5, 10, 25, 50]"
+
         (page)="onPageChange($event)">
 
       </mat-paginator>
+
 
     </div>
 

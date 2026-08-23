@@ -31,12 +31,25 @@ public class EmployeeController {
         this.service = service;
     }
 
+
     /*
-     * Employee listing with:
-     * - pagination
-     * - search
-     * - department filtering
-     * - sorting
+     * ============================================================
+     * EMPLOYEE LIST
+     * ============================================================
+     *
+     * Supports:
+     * - Server-side pagination
+     * - Server-side search
+     * - Department filtering
+     * - Server-side sorting
+     *
+     * Example:
+     *
+     * /api/employees?page=0&size=10&sort=salary,asc
+     *
+     * /api/employees?page=0&size=10&sort=name,desc
+     *
+     * /api/employees?page=1&size=25&sort=department,asc
      */
     @GetMapping
     public Page<Employee> list(
@@ -54,37 +67,113 @@ public class EmployeeController {
             int size,
 
             @RequestParam(defaultValue = "id")
-            String sortBy,
-
-            @RequestParam(defaultValue = "asc")
-            String direction
+            String sort
 
     ) {
 
-        int safePage = Math.max(page, 0);
+        /*
+         * --------------------------------------------------------
+         * Pagination validation
+         * --------------------------------------------------------
+         */
 
-        int safeSize = Math.min(
-                Math.max(size, 1),
-                100
-        );
+        int safePage =
+                Math.max(page, 0);
 
-        String safeSort = switch (sortBy) {
-            case "id", "name", "department", "country", "salary"
-                    -> sortBy;
-            default -> "id";
-        };
+        int safeSize =
+                Math.min(
+                        Math.max(size, 1),
+                        100
+                );
+
+
+        /*
+         * --------------------------------------------------------
+         * Parse sort parameter
+         * --------------------------------------------------------
+         *
+         * Expected format:
+         *
+         * salary,asc
+         * salary,desc
+         * name,asc
+         *
+         * If only "salary" is supplied,
+         * ascending order is used.
+         */
+
+        String[] sortParts =
+                sort.split(",");
+
+        String requestedSort =
+                sortParts[0].trim();
+
+        String requestedDirection =
+                sortParts.length > 1
+                        ? sortParts[1].trim()
+                        : "asc";
+
+
+        /*
+         * --------------------------------------------------------
+         * Whitelist sortable fields
+         * --------------------------------------------------------
+         *
+         * This prevents arbitrary property names from being
+         * passed to Spring Data.
+         */
+
+        String safeSort =
+                switch (requestedSort) {
+
+                    case "id",
+                         "name",
+                         "department",
+                         "country",
+                         "salary"
+                            -> requestedSort;
+
+                    default
+                            -> "id";
+                };
+
+
+        /*
+         * --------------------------------------------------------
+         * Sort direction
+         * --------------------------------------------------------
+         */
 
         Sort.Direction sortDirection =
-                "desc".equalsIgnoreCase(direction)
+                "desc".equalsIgnoreCase(
+                        requestedDirection
+                )
                         ? Sort.Direction.DESC
                         : Sort.Direction.ASC;
+
+
+        /*
+         * --------------------------------------------------------
+         * Build Pageable
+         * --------------------------------------------------------
+         */
 
         Pageable pageable =
                 PageRequest.of(
                         safePage,
                         safeSize,
-                        Sort.by(sortDirection, safeSort)
+                        Sort.by(
+                                sortDirection,
+                                safeSort
+                        )
                 );
+
+
+        /*
+         * --------------------------------------------------------
+         * Delegate to service
+         * --------------------------------------------------------
+         */
 
         return service.searchEmployees(
                 search,
@@ -94,17 +183,31 @@ public class EmployeeController {
     }
 
 
+    /*
+     * ============================================================
+     * GET EMPLOYEE BY ID
+     * ============================================================
+     */
+
     @GetMapping("/{id}")
     public Employee getEmployee(
             @PathVariable Long id
     ) {
+
         return service.findById(id);
     }
 
 
+    /*
+     * ============================================================
+     * CREATE EMPLOYEE
+     * ============================================================
+     */
+
     @PostMapping
     public ResponseEntity<Employee> createEmployee(
-            @Valid @RequestBody EmployeeRequest request
+            @Valid
+            @RequestBody EmployeeRequest request
     ) {
 
         return ResponseEntity.ok(
@@ -113,17 +216,34 @@ public class EmployeeController {
     }
 
 
+    /*
+     * ============================================================
+     * UPDATE EMPLOYEE
+     * ============================================================
+     */
+
     @PutMapping("/{id}")
     public ResponseEntity<Employee> updateEmployee(
             @PathVariable Long id,
-            @Valid @RequestBody EmployeeRequest request
+
+            @Valid
+            @RequestBody EmployeeRequest request
     ) {
 
         return ResponseEntity.ok(
-                service.update(id, request)
+                service.update(
+                        id,
+                        request
+                )
         );
     }
 
+
+    /*
+     * ============================================================
+     * DELETE EMPLOYEE
+     * ============================================================
+     */
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployee(
@@ -136,10 +256,24 @@ public class EmployeeController {
     }
 
 
+    /*
+     * ============================================================
+     * SALARY DELTA ADJUSTMENT
+     * ============================================================
+     *
+     * Example:
+     *
+     * Current salary = 5000
+     * Adjustment = +500
+     * Result = 5500
+     */
+
     @PostMapping("/{id}/adjust")
     public ResponseEntity<Employee> adjustSalary(
             @PathVariable Long id,
-            @Valid @RequestBody SalaryAdjustmentRequest request
+
+            @Valid
+            @RequestBody SalaryAdjustmentRequest request
     ) {
 
         return ResponseEntity.ok(
@@ -151,10 +285,24 @@ public class EmployeeController {
     }
 
 
+    /*
+     * ============================================================
+     * ABSOLUTE SALARY UPDATE
+     * ============================================================
+     *
+     * Example:
+     *
+     * Current salary = 5000
+     * New salary = 7000
+     * Result = 7000
+     */
+
     @PostMapping("/{id}/update")
     public ResponseEntity<Employee> updateSalary(
             @PathVariable Long id,
-            @Valid @RequestBody SalaryUpdateRequest request
+
+            @Valid
+            @RequestBody SalaryUpdateRequest request
     ) {
 
         return ResponseEntity.ok(
@@ -166,9 +314,16 @@ public class EmployeeController {
     }
 
 
+    /*
+     * ============================================================
+     * BULK SALARY ADJUSTMENT
+     * ============================================================
+     */
+
     @PostMapping("/bulk-adjust")
     public ResponseEntity<Map<String, Object>> bulkAdjustSalary(
-            @Valid @RequestBody BulkSalaryAdjustmentRequest request
+            @Valid
+            @RequestBody BulkSalaryAdjustmentRequest request
     ) {
 
         int updated =
@@ -188,6 +343,12 @@ public class EmployeeController {
         );
     }
 
+
+    /*
+     * ============================================================
+     * SALARY ANALYTICS
+     * ============================================================
+     */
 
     @GetMapping("/report/average-salary")
     public BigDecimal averageSalary(
