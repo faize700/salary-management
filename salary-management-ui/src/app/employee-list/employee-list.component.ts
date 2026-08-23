@@ -1,13 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { EmployeeService, Employee } from '../services/employee.service';
 import { FormsModule } from '@angular/forms';
-import { NgFor, NgIf, CurrencyPipe } from '@angular/common';
+import { NgFor, NgIf, NgClass, CurrencyPipe } from '@angular/common';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-employee-list',
   standalone: true,
-  imports: [FormsModule, NgFor, NgIf, CurrencyPipe, MatPaginatorModule],
+   imports: [
+    FormsModule,
+    NgFor,
+    NgIf,
+    NgClass,
+    CurrencyPipe,
+    MatPaginatorModule
+  ],
   templateUrl: './employee-list.component.html',
   styleUrls: ['./employee-list.component.scss']
 })

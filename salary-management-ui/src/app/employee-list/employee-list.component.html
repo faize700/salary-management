@@ -1,89 +1,469 @@
-<div class="employee-container">
+<div class="employee-page">
 
-<div class="reporting-container">
-  <h2>Salary Insights</h2>
+  <!-- Page Header -->
+  <header class="page-header">
+    <div class="header-content">
+      <div class="header-icon">
+        <span>₹</span>
+      </div>
 
-  <label for="dept">Filter by Department:</label>
-  <select id="dept" [(ngModel)]="selectedDept" (change)="loadReports()">
-    <option value="">All</option>
-    <option value="Sales">Sales</option>
-    <option value="Finance">Finance</option>
-    <option value="HR">HR</option>
-    <option value="Engineering">Engineering</option>
-    <option value="Marketing">Marketing</option>
-  </select>
-
-  <div class="report-cards">
-    <div class="report-card">
-      <h3>Average Salary</h3>
-      <p>{{ averageSalary | currency:'USD' }}</p>
+      <div>
+        <h1>Employee Salary Management</h1>
+        <p>Manage employee compensation and salary insights</p>
+      </div>
     </div>
-    <div class="report-card">
-      <h3>Minimum Salary</h3>
-      <p>{{ minSalary | currency:'USD' }}</p>
+  </header>
+
+
+  <!-- Salary Insights -->
+  <section class="insights-section">
+
+    <div class="section-heading">
+      <div>
+        <h2>Salary Insights</h2>
+        <p>Overview of salary distribution across departments</p>
+      </div>
+
+      <div class="department-filter">
+        <label for="dept">Department</label>
+
+        <select
+          id="dept"
+          [(ngModel)]="selectedDept"
+          (change)="loadReports()">
+
+          <option value="">All Departments</option>
+          <option value="Sales">Sales</option>
+          <option value="Finance">Finance</option>
+          <option value="HR">HR</option>
+          <option value="Engineering">Engineering</option>
+          <option value="Marketing">Marketing</option>
+
+        </select>
+      </div>
     </div>
-    <div class="report-card">
-      <h3>Maximum Salary</h3>
-      <p>{{ maxSalary | currency:'USD' }}</p>
+
+
+    <div class="report-cards">
+
+      <!-- Average -->
+      <div class="report-card average-card">
+
+        <div class="report-icon">
+          <span>↗</span>
+        </div>
+
+        <div class="report-content">
+          <span class="report-label">Average Salary</span>
+
+          <strong>
+            {{ averageSalary | currency:'USD':'symbol':'1.0-0' }}
+          </strong>
+
+          <span class="report-description">
+            Current average compensation
+          </span>
+        </div>
+
+      </div>
+
+
+      <!-- Minimum -->
+      <div class="report-card minimum-card">
+
+        <div class="report-icon">
+          <span>↓</span>
+        </div>
+
+        <div class="report-content">
+          <span class="report-label">Minimum Salary</span>
+
+          <strong>
+            {{ minSalary | currency:'USD':'symbol':'1.0-0' }}
+          </strong>
+
+          <span class="report-description">
+            Lowest recorded salary
+          </span>
+        </div>
+
+      </div>
+
+
+      <!-- Maximum -->
+      <div class="report-card maximum-card">
+
+        <div class="report-icon">
+          <span>↑</span>
+        </div>
+
+        <div class="report-content">
+          <span class="report-label">Maximum Salary</span>
+
+          <strong>
+            {{ maxSalary | currency:'USD':'symbol':'1.0-0' }}
+          </strong>
+
+          <span class="report-description">
+            Highest recorded salary
+          </span>
+        </div>
+
+      </div>
+
     </div>
-  </div>
-</div>
 
-  <h2>Employee List</h2>
-  <div class="search-container">
-  <input type="text"
-         [(ngModel)]="searchTerm"
-         placeholder="Search by name, department, or country"
-         class="search-input">
-</div>
-<div class="actions-container">
-  <button class="export-btn" (click)="exportToCSV()">Export to CSV</button>
-</div>
+  </section>
 
-<table class="employee-table">
-    <thead>
-  <tr>
-    <th (click)="setSort('id')">
-      ID <span *ngIf="sortColumn === 'id'">{{ sortDirection === 'asc' ? '↑' : '↓' }}</span>
-    </th>
-    <th (click)="setSort('name')">
-      Name <span *ngIf="sortColumn === 'name'">{{ sortDirection === 'asc' ? '↑' : '↓' }}</span>
-    </th>
-    <th (click)="setSort('department')">
-      Department <span *ngIf="sortColumn === 'department'">{{ sortDirection === 'asc' ? '↑' : '↓' }}</span>
-    </th>
-    <th (click)="setSort('country')">
-      Country <span *ngIf="sortColumn === 'country'">{{ sortDirection === 'asc' ? '↑' : '↓' }}</span>
-    </th>
-    <th (click)="setSort('salary')">
-      Salary <span *ngIf="sortColumn === 'salary'">{{ sortDirection === 'asc' ? '↑' : '↓' }}</span>
-    </th>
-    <th>Actions</th>
-  </tr>
-</thead>
 
-  <tbody>
-    <tr *ngFor="let e of sortedEmployees">
-      <td>{{ e.id }}</td>
-      <td>{{ e.name }}</td>
-      <td>{{ e.department }}</td>
-      <td>{{ e.country }}</td>
-      <td>{{ e.salary | currency:'USD' }}</td>
-      <td>
-        <input type="number" [(ngModel)]="e.adjustment" placeholder="Adjust amount" class="adjust-input">
-        <button class="update-btn" (click)="adjustSalary(e.id, e.adjustment)">Adjust</button>
+  <!-- Employee Management -->
+  <section class="employee-section">
 
-        <input type="number" [(ngModel)]="e.newSalary" placeholder="New salary" class="update-input">
-        <button class="set-btn" (click)="updateSalary(e.id, e.newSalary)">Set Salary</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+    <!-- Section Header -->
+    <div class="employee-header">
 
-<mat-paginator [length]="employees.length"
-               [pageSize]="pageSize"
-               [pageSizeOptions]="[5, 10, 25, 50]"
-               (page)="onPageChange($event)">
-</mat-paginator>
+      <div class="section-title">
+        <h2>Employee List</h2>
+
+        <span class="employee-count">
+          {{ employees.length }} employees
+        </span>
+      </div>
+
+
+      <div class="table-actions">
+
+        <!-- Search -->
+        <div class="search-box">
+
+          <span class="search-icon">⌕</span>
+
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            placeholder="Search employees..."
+            aria-label="Search employees">
+
+          <button
+            *ngIf="searchTerm"
+            class="clear-search"
+            type="button"
+            (click)="searchTerm = ''"
+            aria-label="Clear search">
+
+            ×
+
+          </button>
+
+        </div>
+
+
+        <!-- Export -->
+        <button
+          class="export-btn"
+          type="button"
+          (click)="exportToCSV()">
+
+          <span class="export-icon">↓</span>
+          Export CSV
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- Table -->
+    <div class="table-wrapper">
+
+      <table class="employee-table">
+
+        <thead>
+
+          <tr>
+
+            <th
+              class="id-column"
+              (click)="setSort('id')">
+
+              <span>ID</span>
+
+              <span
+                class="sort-indicator"
+                [class.active]="sortColumn === 'id'">
+
+                {{ sortColumn === 'id'
+                    ? (sortDirection === 'asc' ? '↑' : '↓')
+                    : '↕'
+                }}
+
+              </span>
+
+            </th>
+
+
+            <th
+              (click)="setSort('name')">
+
+              <span>Employee</span>
+
+              <span
+                class="sort-indicator"
+                [class.active]="sortColumn === 'name'">
+
+                {{ sortColumn === 'name'
+                    ? (sortDirection === 'asc' ? '↑' : '↓')
+                    : '↕'
+                }}
+
+              </span>
+
+            </th>
+
+
+            <th
+              (click)="setSort('department')">
+
+              <span>Department</span>
+
+              <span
+                class="sort-indicator"
+                [class.active]="sortColumn === 'department'">
+
+                {{ sortColumn === 'department'
+                    ? (sortDirection === 'asc' ? '↑' : '↓')
+                    : '↕'
+                }}
+
+              </span>
+
+            </th>
+
+
+            <th
+              (click)="setSort('country')">
+
+              <span>Country</span>
+
+              <span
+                class="sort-indicator"
+                [class.active]="sortColumn === 'country'">
+
+                {{ sortColumn === 'country'
+                    ? (sortDirection === 'asc' ? '↑' : '↓')
+                    : '↕'
+                }}
+
+              </span>
+
+            </th>
+
+
+            <th
+              class="salary-column"
+              (click)="setSort('salary')">
+
+              <span>Salary</span>
+
+              <span
+                class="sort-indicator"
+                [class.active]="sortColumn === 'salary'">
+
+                {{ sortColumn === 'salary'
+                    ? (sortDirection === 'asc' ? '↑' : '↓')
+                    : '↕'
+                }}
+
+              </span>
+
+            </th>
+
+
+            <th class="actions-column">
+              Actions
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr
+            *ngFor="let e of sortedEmployees"
+            class="employee-row">
+
+            <!-- ID -->
+            <td class="employee-id">
+              #{{ e.id }}
+            </td>
+
+
+            <!-- Employee -->
+            <td>
+
+              <div class="employee-info">
+
+                <div class="avatar">
+                  {{ e.name.charAt(0).toUpperCase() }}
+                </div>
+
+                <div class="employee-name">
+                  {{ e.name }}
+                </div>
+
+              </div>
+
+            </td>
+
+
+            <!-- Department -->
+            <td>
+
+              <span
+                class="department-badge"
+                [ngClass]="{
+                  'engineering': e.department === 'Engineering',
+                  'finance': e.department === 'Finance',
+                  'sales': e.department === 'Sales',
+                  'hr': e.department === 'HR',
+                  'marketing': e.department === 'Marketing'
+                }">
+
+                {{ e.department }}
+
+              </span>
+
+            </td>
+
+
+            <!-- Country -->
+            <td>
+
+              <div class="country-cell">
+                <span class="country-marker">●</span>
+                {{ e.country }}
+              </div>
+
+            </td>
+
+
+            <!-- Salary -->
+            <td class="salary-cell">
+
+              {{ e.salary | currency:'USD':'symbol':'1.0-0' }}
+
+            </td>
+
+
+            <!-- Actions -->
+            <td>
+
+              <div class="salary-actions">
+
+                <!-- Adjustment -->
+                <div class="action-group">
+
+                  <input
+                    type="number"
+                    [(ngModel)]="e.adjustment"
+                    placeholder="Amount"
+                    class="salary-input">
+
+                  <button
+                    type="button"
+                    class="adjust-btn"
+                    (click)="adjustSalary(e.id, e.adjustment)">
+
+                    Adjust
+
+                  </button>
+
+                </div>
+
+
+                <!-- Set Salary -->
+                <div class="action-group">
+
+                  <input
+                    type="number"
+                    [(ngModel)]="e.newSalary"
+                    placeholder="New salary"
+                    class="salary-input">
+
+                  <button
+                    type="button"
+                    class="set-btn"
+                    (click)="updateSalary(e.id, e.newSalary)">
+
+                    Set Salary
+
+                  </button>
+
+                </div>
+
+              </div>
+
+            </td>
+
+          </tr>
+
+
+          <!-- Empty State -->
+          <tr *ngIf="sortedEmployees.length === 0">
+
+            <td
+              colspan="6"
+              class="empty-state">
+
+              <div class="empty-icon">
+                ⌕
+              </div>
+
+              <h3>No employees found</h3>
+
+              <p>
+                Try changing your search or filter criteria.
+              </p>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+
+    <!-- Table Footer -->
+    <div class="table-footer">
+
+      <div class="table-summary">
+
+        Showing
+        <strong>{{ sortedEmployees.length }}</strong>
+        of
+        <strong>{{ employees.length }}</strong>
+        employees
+
+      </div>
+
+
+      <mat-paginator
+        [length]="employees.length"
+        [pageSize]="pageSize"
+        [pageIndex]="pageIndex"
+        [pageSizeOptions]="[5, 10, 25, 50]"
+        (page)="onPageChange($event)">
+
+      </mat-paginator>
+
+    </div>
+
+  </section>
 
 </div>

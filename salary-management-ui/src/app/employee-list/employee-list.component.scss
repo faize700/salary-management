@@ -1,216 +1,1214 @@
-.employee-container {
-  padding: 20px;
+/* =========================================================
+   Employee Salary Management
+   Modern Enterprise Dashboard
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   Page
+   --------------------------------------------------------- */
+
+.employee-page {
+  min-height: 100vh;
+  padding: 28px 32px 40px;
+
+  background: #f5f7fb;
+
+  color: #172033;
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+
+  box-sizing: border-box;
 }
 
-.employee-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
+
+/* ---------------------------------------------------------
+   Header
+   --------------------------------------------------------- */
+
+.page-header {
+  margin-bottom: 24px;
 }
 
-.employee-table th,
-.employee-table td {
-  border: 1px solid #ddd;
-  padding: 10px;
-  text-align: center;
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
-.employee-table th {
-  background-color: #f4f4f4;
-  font-weight: bold;
+.header-icon {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: linear-gradient(
+    135deg,
+    #155eef,
+    #084dcc
+  );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 6px 14px rgba(21, 94, 239, 0.22);
 }
 
-.adjust-input {
-  width: 80px;
-  padding: 5px;
-  margin-right: 8px;
+.header-icon span {
+  font-size: 22px;
+  font-weight: 700;
 }
 
-.update-btn {
-  background-color: #1976d2;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
+.page-header h1 {
+  margin: 0;
+
+  font-size: 26px;
+  line-height: 1.25;
+
+  font-weight: 700;
+
+  color: #101828;
 }
 
-.update-btn:hover {
-  background-color: #1565c0;
+.page-header p {
+  margin: 5px 0 0;
+
+  font-size: 14px;
+
+  color: #667085;
 }
-.employee-table td:nth-child(5) {
+
+
+/* ---------------------------------------------------------
+   Common Section
+   --------------------------------------------------------- */
+
+.insights-section,
+.employee-section {
+  background: #ffffff;
+
+  border: 1px solid #e4e7ec;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 2px 6px rgba(16, 24, 40, 0.04);
+
+  overflow: hidden;
+}
+
+
+/* ---------------------------------------------------------
+   Salary Insights
+   --------------------------------------------------------- */
+
+.insights-section {
+  padding: 24px;
+
+  margin-bottom: 24px;
+}
+
+.section-heading {
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: space-between;
+
+  gap: 24px;
+
+  margin-bottom: 22px;
+}
+
+.section-heading h2,
+.employee-section h2 {
+  margin: 0;
+
+  color: #101828;
+
+  font-size: 18px;
+
+  font-weight: 700;
+}
+
+.section-heading p {
+  margin: 5px 0 0;
+
+  color: #667085;
+
+  font-size: 13px;
+}
+
+
+/* ---------------------------------------------------------
+   Department Filter
+   --------------------------------------------------------- */
+
+.department-filter {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 6px;
+
+  min-width: 210px;
+}
+
+.department-filter label {
+  font-size: 12px;
+
   font-weight: 600;
-  color: #2e7d32; // green for salary
+
+  color: #344054;
 }
 
-.adjust-input {
-  width: 100px;
-  padding: 6px;
-  margin-right: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
+.department-filter select {
+  height: 40px;
 
-.update-btn {
-  background-color: #1976d2;
-  color: #fff;
-  border: none;
-  padding: 6px 14px;
-  border-radius: 4px;
+  padding: 0 36px 0 12px;
+
+  border: 1px solid #d0d5dd;
+
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: #344054;
+
+  font-size: 13px;
+
+  outline: none;
+
   cursor: pointer;
-  transition: background-color 0.2s ease;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.update-btn:hover {
-  background-color: #1565c0;
-}
-.employee-container {
-  padding: 20px;
-  font-family: Arial, sans-serif;
+.department-filter select:hover {
+  border-color: #98a2b3;
 }
 
-.employee-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+.department-filter select:focus {
+  border-color: #155eef;
+
+  box-shadow:
+    0 0 0 3px rgba(21, 94, 239, 0.1);
 }
 
-.employee-table th,
-.employee-table td {
-  border: 1px solid #ddd;
-  padding: 12px;
-  text-align: center;
-}
 
-.employee-table th {
-  background-color: #f4f4f4;
-  font-weight: bold;
-  color: #333;
-}
-
-.employee-table td:nth-child(5) {
-  font-weight: 600;
-  color: #2e7d32; // green for salary
-}
-
-.adjust-input,
-.update-input {
-  width: 100px;
-  padding: 6px;
-  margin-right: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.update-btn,
-.set-btn {
-  background-color: #1976d2;
-  color: #fff;
-  border: none;
-  padding: 6px 14px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  margin-right: 6px;
-}
-
-.update-btn:hover,
-.set-btn:hover {
-  background-color: #1565c0;
-}
-
-.update-btn:active,
-.set-btn:active {
-  background-color: #0d47a1;
-}
-.reporting-container {
-  margin-bottom: 20px;
-}
+/* ---------------------------------------------------------
+   Report Cards
+   --------------------------------------------------------- */
 
 .report-cards {
-  display: flex;
-  gap: 20px;
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 16px;
 }
 
 .report-card {
-  flex: 1;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 15px;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.report-card h3 {
-  margin-bottom: 10px;
-  color: #1976d2;
-}
-
-.report-card p {
-  font-size: 1.2em;
-  font-weight: bold;
-  color: #2e7d32;
-}
-select {
-  margin-bottom: 15px;
-  padding: 6px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-mat-paginator {
-  margin-top: 15px;
-  display: flex;
-  justify-content: center;
-}
-.search-container {
-  margin: 15px 0;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.search-input {
-  width: 300px;
-  padding: 6px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-.employee-table th {
-  cursor: pointer;
-  user-select: none;
-}
-
-.employee-table th:hover {
-  background-color: #e3f2fd;
-}
-.employee-table th {
-  cursor: pointer;
-  user-select: none;
   position: relative;
-  padding-right: 20px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 16px;
+
+  min-height: 108px;
+
+  padding: 18px;
+
+  border: 1px solid #eaecf0;
+
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.employee-table th span {
-  font-size: 0.8em;
-  margin-left: 5px;
-  color: #1976d2; /* Azure/Blue theme accent */
+.report-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 20px rgba(16, 24, 40, 0.08);
 }
-.actions-container {
-  margin: 15px 0;
+
+
+/* ---------------------------------------------------------
+   Report Icons
+   --------------------------------------------------------- */
+
+.report-icon {
+  width: 48px;
+  height: 48px;
+
+  flex-shrink: 0;
+
   display: flex;
-  justify-content: flex-end;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  font-size: 22px;
+
+  font-weight: 700;
 }
+
+.average-card .report-icon {
+  background: #eaf2ff;
+  color: #155eef;
+}
+
+.minimum-card .report-icon {
+  background: #ecfdf3;
+  color: #039855;
+}
+
+.maximum-card .report-icon {
+  background: #fff4ed;
+  color: #f04438;
+}
+
+
+/* ---------------------------------------------------------
+   Report Content
+   --------------------------------------------------------- */
+
+.report-content {
+  display: flex;
+
+  flex-direction: column;
+
+  min-width: 0;
+}
+
+.report-label {
+  font-size: 12px;
+
+  color: #667085;
+
+  margin-bottom: 5px;
+}
+
+.report-content strong {
+  font-size: 22px;
+
+  line-height: 1.2;
+
+  font-weight: 700;
+
+  color: #101828;
+}
+
+.average-card .report-content strong {
+  color: #155eef;
+}
+
+.minimum-card .report-content strong {
+  color: #039855;
+}
+
+.maximum-card .report-content strong {
+  color: #f04438;
+}
+
+.report-description {
+  margin-top: 5px;
+
+  font-size: 11px;
+
+  color: #98a2b3;
+}
+
+
+/* ---------------------------------------------------------
+   Employee Section
+   --------------------------------------------------------- */
+
+.employee-section {
+  overflow: visible;
+}
+
+.employee-header {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 20px 24px;
+
+  border-bottom: 1px solid #eaecf0;
+}
+
+.section-title {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+.employee-count {
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: 4px 9px;
+
+  border-radius: 999px;
+
+  background: #f2f4f7;
+
+  color: #667085;
+
+  font-size: 11px;
+
+  font-weight: 600;
+}
+
+
+/* ---------------------------------------------------------
+   Table Actions
+   --------------------------------------------------------- */
+
+.table-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+
+/* ---------------------------------------------------------
+   Search
+   --------------------------------------------------------- */
+
+.search-box {
+  position: relative;
+
+  width: 300px;
+}
+
+.search-box input {
+  width: 100%;
+
+  height: 40px;
+
+  box-sizing: border-box;
+
+  padding:
+    0 36px
+    0 38px;
+
+  border: 1px solid #d0d5dd;
+
+  border-radius: 7px;
+
+  outline: none;
+
+  background: #ffffff;
+
+  color: #101828;
+
+  font-size: 13px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.search-box input::placeholder {
+  color: #98a2b3;
+}
+
+.search-box input:hover {
+  border-color: #98a2b3;
+}
+
+.search-box input:focus {
+  border-color: #155eef;
+
+  box-shadow:
+    0 0 0 3px rgba(21, 94, 239, 0.1);
+}
+
+.search-icon {
+  position: absolute;
+
+  left: 13px;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  color: #667085;
+
+  font-size: 20px;
+
+  pointer-events: none;
+}
+
+.clear-search {
+  position: absolute;
+
+  right: 8px;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  width: 24px;
+  height: 24px;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: #f2f4f7;
+
+  color: #667085;
+
+  cursor: pointer;
+
+  font-size: 16px;
+
+  line-height: 20px;
+}
+
+.clear-search:hover {
+  background: #e4e7ec;
+
+  color: #101828;
+}
+
+
+/* ---------------------------------------------------------
+   Export Button
+   --------------------------------------------------------- */
 
 .export-btn {
-  background-color: #1976d2;
-  color: #fff;
+  height: 40px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 0 15px;
+
   border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
+
+  border-radius: 7px;
+
+  background: #155eef;
+
+  color: #ffffff;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
   cursor: pointer;
+
+  box-shadow:
+    0 2px 4px rgba(21, 94, 239, 0.18);
+
+  transition:
+    background 0.2s ease,
+    transform 0.1s ease,
+    box-shadow 0.2s ease;
 }
 
 .export-btn:hover {
-  background-color: #1565c0;
+  background: #004eeb;
+
+  box-shadow:
+    0 4px 8px rgba(21, 94, 239, 0.22);
+}
+
+.export-btn:active {
+  transform: translateY(1px);
+}
+
+.export-icon {
+  font-size: 17px;
+
+  font-weight: 700;
+}
+
+
+/* ---------------------------------------------------------
+   Table
+   --------------------------------------------------------- */
+
+.table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+.employee-table {
+  width: 100%;
+
+  min-width: 1050px;
+
+  border-collapse: collapse;
+
+  table-layout: auto;
+}
+
+
+/* ---------------------------------------------------------
+   Table Header
+   --------------------------------------------------------- */
+
+.employee-table thead th {
+  height: 48px;
+
+  padding: 0 16px;
+
+  background: #f9fafb;
+
+  border-bottom: 1px solid #eaecf0;
+
+  color: #667085;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.04em;
+
+  text-align: left;
+
+  white-space: nowrap;
+
+  user-select: none;
+}
+
+.employee-table thead th:not(.actions-column) {
+  cursor: pointer;
+}
+
+.employee-table thead th:not(.actions-column):hover {
+  background: #f2f4f7;
+
+  color: #344054;
+}
+
+.employee-table .id-column {
+  width: 75px;
+}
+
+.employee-table .salary-column {
+  width: 130px;
+}
+
+.employee-table .actions-column {
+  width: 380px;
+
+  text-align: left;
+}
+
+
+/* ---------------------------------------------------------
+   Sort Indicator
+   --------------------------------------------------------- */
+
+.sort-indicator {
+  margin-left: 6px;
+
+  color: #98a2b3;
+
+  font-size: 13px;
+
+  font-weight: 400;
+}
+
+.sort-indicator.active {
+  color: #155eef;
+
+  font-weight: 700;
+}
+
+
+/* ---------------------------------------------------------
+   Table Body
+   --------------------------------------------------------- */
+
+.employee-table tbody td {
+  height: 66px;
+
+  padding: 8px 16px;
+
+  border-bottom: 1px solid #f0f2f5;
+
+  color: #344054;
+
+  font-size: 13px;
+
+  background: #ffffff;
+
+  vertical-align: middle;
+}
+
+.employee-row {
+  transition: background 0.15s ease;
+}
+
+.employee-row:hover td {
+  background: #f8faff;
+}
+
+.employee-row:last-child td {
+  border-bottom: none;
+}
+
+
+/* ---------------------------------------------------------
+   Employee ID
+   --------------------------------------------------------- */
+
+.employee-id {
+  color: #667085 !important;
+
+  font-family:
+    "SFMono-Regular",
+    Consolas,
+    "Liberation Mono",
+    monospace;
+
+  font-size: 12px !important;
+
+  font-weight: 600;
+}
+
+
+/* ---------------------------------------------------------
+   Employee Info
+   --------------------------------------------------------- */
+
+.employee-info {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #eaf2ff;
+
+  color: #155eef;
+
+  font-size: 12px;
+
+  font-weight: 700;
+}
+
+.employee-name {
+  color: #101828;
+
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+
+/* ---------------------------------------------------------
+   Department Badges
+   --------------------------------------------------------- */
+
+.department-badge {
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: 5px 9px;
+
+  border-radius: 6px;
+
+  font-size: 11px;
+
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+.department-badge.engineering {
+  background: #eaf2ff;
+  color: #155eef;
+}
+
+.department-badge.finance {
+  background: #ecfdf3;
+  color: #027a48;
+}
+
+.department-badge.sales {
+  background: #fff6ed;
+  color: #c4320a;
+}
+
+.department-badge.hr {
+  background: #fdf2fa;
+  color: #c11574;
+}
+
+.department-badge.marketing {
+  background: #f4f3ff;
+  color: #6938ef;
+}
+
+
+/* ---------------------------------------------------------
+   Country
+   --------------------------------------------------------- */
+
+.country-cell {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  color: #475467;
+
+  white-space: nowrap;
+}
+
+.country-marker {
+  width: 8px;
+  height: 8px;
+
+  display: inline-block;
+
+  border-radius: 50%;
+
+  background: #98a2b3;
+
+  font-size: 0;
+}
+
+
+/* ---------------------------------------------------------
+   Salary
+   --------------------------------------------------------- */
+
+.salary-cell {
+  color: #039855 !important;
+
+  font-size: 14px !important;
+
+  font-weight: 700 !important;
+
+  white-space: nowrap;
+}
+
+
+/* ---------------------------------------------------------
+   Salary Actions
+   --------------------------------------------------------- */
+
+.salary-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  flex-wrap: nowrap;
+}
+
+.action-group {
+  display: flex;
+
+  align-items: center;
+
+  gap: 5px;
+}
+
+.salary-input {
+  width: 105px;
+
+  height: 34px;
+
+  box-sizing: border-box;
+
+  padding: 0 9px;
+
+  border: 1px solid #d0d5dd;
+
+  border-radius: 6px;
+
+  outline: none;
+
+  color: #344054;
+
+  background: #ffffff;
+
+  font-size: 12px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.salary-input::placeholder {
+  color: #98a2b3;
+}
+
+.salary-input:hover {
+  border-color: #98a2b3;
+}
+
+.salary-input:focus {
+  border-color: #155eef;
+
+  box-shadow:
+    0 0 0 3px rgba(21, 94, 239, 0.1);
+}
+
+
+/* Remove number spinner where possible */
+
+.salary-input::-webkit-inner-spin-button,
+.salary-input::-webkit-outer-spin-button {
+  opacity: 0.4;
+}
+
+
+/* ---------------------------------------------------------
+   Action Buttons
+   --------------------------------------------------------- */
+
+.adjust-btn,
+.set-btn {
+  height: 34px;
+
+  padding: 0 11px;
+
+  border: none;
+
+  border-radius: 6px;
+
+  color: #ffffff;
+
+  font-size: 11px;
+
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.1s ease;
+}
+
+.adjust-btn {
+  background: #155eef;
+}
+
+.adjust-btn:hover {
+  background: #004eeb;
+}
+
+.set-btn {
+  background: #039855;
+}
+
+.set-btn:hover {
+  background: #027a48;
+}
+
+.adjust-btn:active,
+.set-btn:active {
+  transform: translateY(1px);
+}
+
+
+/* ---------------------------------------------------------
+   Empty State
+   --------------------------------------------------------- */
+
+.empty-state {
+  height: 220px !important;
+
+  text-align: center !important;
+
+  color: #667085 !important;
+}
+
+.empty-icon {
+  width: 48px;
+  height: 48px;
+
+  margin: 0 auto 10px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #f2f4f7;
+
+  color: #667085;
+
+  font-size: 24px;
+}
+
+.empty-state h3 {
+  margin: 0 0 5px;
+
+  color: #344054;
+
+  font-size: 14px;
+}
+
+.empty-state p {
+  margin: 0;
+
+  color: #98a2b3;
+
+  font-size: 12px;
+}
+
+
+/* ---------------------------------------------------------
+   Table Footer
+   --------------------------------------------------------- */
+
+.table-footer {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  min-height: 64px;
+
+  padding: 8px 20px;
+
+  border-top: 1px solid #eaecf0;
+
+  background: #ffffff;
+}
+
+.table-summary {
+  color: #667085;
+
+  font-size: 12px;
+
+  white-space: nowrap;
+}
+
+.table-summary strong {
+  color: #344054;
+
+  font-weight: 600;
+}
+
+
+/* ---------------------------------------------------------
+   Angular Material Paginator
+   --------------------------------------------------------- */
+
+mat-paginator {
+  background: transparent;
+
+  color: #667085;
+}
+
+
+/* ---------------------------------------------------------
+   Focus Accessibility
+   --------------------------------------------------------- */
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid #155eef;
+
+  outline-offset: 2px;
+}
+
+
+/* ---------------------------------------------------------
+   Responsive - Tablet
+   --------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+
+  .employee-page {
+    padding: 20px;
+  }
+
+  .report-cards {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+
+  .employee-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .table-actions {
+    width: 100%;
+  }
+
+  .search-box {
+    flex: 1;
+
+    width: auto;
+  }
+
+}
+
+
+/* ---------------------------------------------------------
+   Responsive - Mobile
+   --------------------------------------------------------- */
+
+@media (max-width: 768px) {
+
+  .employee-page {
+    padding: 14px;
+  }
+
+  .page-header h1 {
+    font-size: 20px;
+  }
+
+  .page-header p {
+    font-size: 12px;
+  }
+
+  .header-icon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .section-heading {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .department-filter {
+    width: 100%;
+  }
+
+  .report-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .employee-header {
+    padding: 18px;
+  }
+
+  .table-actions {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .search-box {
+    width: 100%;
+  }
+
+  .export-btn {
+    justify-content: center;
+
+    width: 100%;
+  }
+
+  .table-footer {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    padding: 12px;
+  }
+
+}
+
+
+/* ---------------------------------------------------------
+   Small Mobile
+   --------------------------------------------------------- */
+
+@media (max-width: 480px) {
+
+  .employee-page {
+    padding: 10px;
+  }
+
+  .insights-section {
+    padding: 16px;
+  }
+
+  .report-card {
+    min-height: 90px;
+
+    padding: 14px;
+  }
+
+  .report-content strong {
+    font-size: 19px;
+  }
+
+  .employee-count {
+    display: none;
+  }
+
 }
