@@ -5,6 +5,7 @@ import com.acme.salary_management.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 @Service
@@ -33,5 +34,26 @@ public class EmployeeService {
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
         emp.setSalary(newSalary);
         repo.save(emp);
+    }
+        public BigDecimal getAverageSalary(String dept) {
+        List<Employee> employees = findByDepartment(dept);
+        return employees.stream()
+                .map(Employee::getSalary)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .divide(BigDecimal.valueOf(employees.size()), RoundingMode.HALF_UP);
+    }
+
+    public BigDecimal getMinSalary(String dept) {
+        return findByDepartment(dept).stream()
+                .map(Employee::getSalary)
+                .min(BigDecimal::compareTo)
+                .orElse(BigDecimal.ZERO);
+    }
+
+    public BigDecimal getMaxSalary(String dept) {
+        return findByDepartment(dept).stream()
+                .map(Employee::getSalary)
+                .max(BigDecimal::compareTo)
+                .orElse(BigDecimal.ZERO);
     }
 }

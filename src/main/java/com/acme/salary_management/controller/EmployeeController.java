@@ -39,4 +39,20 @@ public class EmployeeController {
         service.updateSalary(id, newSalary);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/report/average-salary")
+    public BigDecimal averageSalary(@RequestParam(required = false) String dept) {
+        return service.getAverageSalary(dept);
+    }
+
+    @GetMapping("/report/min-salary")
+    public BigDecimal minSalary(@RequestParam(required = false) String dept) {
+        return service.getMinSalary(dept);
+    }
+
+    @GetMapping("/report/max-salary")
+    public BigDecimal maxSalary(@RequestParam(required = false) String dept) {
+        return service.getMaxSalary(dept);
+    }
+
 }
