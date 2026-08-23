@@ -1,1 +1,28 @@
-<p>employee-list works!</p>
+<div>
+  <h2>Employee List</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Department</th>
+        <th>Country</th>
+        <th>Salary</th>
+        <th>Adjust</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let e of employees">
+        <td>{{ e.id }}</td>
+        <td>{{ e.name }}</td>
+        <td>{{ e.department }}</td>
+        <td>{{ e.country }}</td>
+        <td>{{ e.salary }}</td>
+        <td>
+          <input type="number" [(ngModel)]="adjustment" placeholder="Amount">
+          <button (click)="adjustSalary(e.id)">Update</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
