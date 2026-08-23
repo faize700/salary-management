@@ -1,6 +1,23 @@
 <div class="employee-container">
-  <h2>Employee List</h2>
 
+    <div class="reporting-container">
+    <h2>Salary Insights</h2>
+    <div class="report-cards">
+        <div class="report-card">
+        <h3>Average Salary</h3>
+        <p>{{ averageSalary | currency:'USD' }}</p>
+        </div>
+        <div class="report-card">
+        <h3>Minimum Salary</h3>
+        <p>{{ minSalary | currency:'USD' }}</p>
+        </div>
+        <div class="report-card">
+        <h3>Maximum Salary</h3>
+        <p>{{ maxSalary | currency:'USD' }}</p>
+        </div>
+    </div>
+    </div>
+  <h2>Employee List</h2>
   <table class="employee-table">
     <thead>
       <tr>

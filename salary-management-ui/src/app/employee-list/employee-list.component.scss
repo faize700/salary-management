@@ -124,3 +124,32 @@
 .set-btn:active {
   background-color: #0d47a1;
 }
+.reporting-container {
+  margin-bottom: 20px;
+}
+
+.report-cards {
+  display: flex;
+  gap: 20px;
+}
+
+.report-card {
+  flex: 1;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.report-card h3 {
+  margin-bottom: 10px;
+  color: #1976d2;
+}
+
+.report-card p {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #2e7d32;
+}

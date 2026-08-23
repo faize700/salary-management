@@ -29,4 +29,18 @@ export class EmployeeService {
   updateSalary(id: number, newSalary: number): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/${id}/update`, { salary: newSalary });
   }
+
+  getAverageSalary(dept?: string): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/report/average-salary${dept ? '?dept=' + dept : ''}`);
+    }
+
+    getMinSalary(dept?: string): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/report/min-salary${dept ? '?dept=' + dept : ''}`);
+    }
+
+    getMaxSalary(dept?: string): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/report/max-salary${dept ? '?dept=' + dept : ''}`);
+    }
+
+
 }

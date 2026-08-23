@@ -15,9 +15,9 @@ export class EmployeeListComponent implements OnInit {
 
   constructor(private employeeService: EmployeeService) {}
 
-  ngOnInit(): void {
-    this.loadEmployees();
-  }
+  // ngOnInit(): void {
+  //   this.loadEmployees();
+  // }
 
   loadEmployees(): void {
     this.employeeService.getEmployees().subscribe(data => {
@@ -39,5 +39,20 @@ export class EmployeeListComponent implements OnInit {
     this.employeeService.updateSalary(id, newSalary).subscribe(() => {
       this.loadEmployees();
     });
+  }
+
+  averageSalary: number = 0;
+  minSalary: number = 0;
+  maxSalary: number = 0;
+
+  loadReports(): void {
+    this.employeeService.getAverageSalary().subscribe(val => this.averageSalary = val);
+    this.employeeService.getMinSalary().subscribe(val => this.minSalary = val);
+    this.employeeService.getMaxSalary().subscribe(val => this.maxSalary = val);
+  }
+
+  ngOnInit(): void {
+    this.loadEmployees();
+    this.loadReports();
   }
 }
