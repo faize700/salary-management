@@ -112,4 +112,31 @@ export class EmployeeListComponent implements OnInit {
       this.sortDirection = 'asc';
     }
   }
+
+    exportToCSV(): void {
+    const headers = ['ID', 'Name', 'Department', 'Country', 'Salary'];
+    const rows = this.sortedEmployees.map(e => [
+      e.id,
+      e.name,
+      e.department,
+      e.country,
+      e.salary
+    ]);
+
+    const csvContent =
+      [headers, ...rows]
+        .map(row => row.join(','))
+        .join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'employee-salaries.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
 }

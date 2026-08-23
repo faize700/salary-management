@@ -196,3 +196,21 @@ mat-paginator {
   margin-left: 5px;
   color: #1976d2; /* Azure/Blue theme accent */
 }
+.actions-container {
+  margin: 15px 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.export-btn {
+  background-color: #1976d2;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.export-btn:hover {
+  background-color: #1565c0;
+}
