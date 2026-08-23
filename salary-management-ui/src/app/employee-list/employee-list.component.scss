@@ -164,3 +164,15 @@ mat-paginator {
   display: flex;
   justify-content: center;
 }
+.search-container {
+  margin: 15px 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.search-input {
+  width: 300px;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}

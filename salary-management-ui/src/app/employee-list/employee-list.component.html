@@ -1,6 +1,6 @@
 <div class="employee-container">
 
-    <div class="reporting-container">
+<div class="reporting-container">
   <h2>Salary Insights</h2>
 
   <label for="dept">Filter by Department:</label>
@@ -30,39 +30,46 @@
 </div>
 
   <h2>Employee List</h2>
-  <table class="employee-table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Department</th>
-        <th>Country</th>
-        <th>Salary</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let e of paginatedEmployees">
-        <td>{{ e.id }}</td>
-        <td>{{ e.name }}</td>
-        <td>{{ e.department }}</td>
-        <td>{{ e.country }}</td>
-        <td>{{ e.salary | currency:'USD' }}</td>
-        <td>
-          <!-- Delta adjustment -->
-          <input type="number" [(ngModel)]="e.adjustment" placeholder="Adjust amount" class="adjust-input">
-          <button class="update-btn" (click)="adjustSalary(e.id, e.adjustment)">Adjust</button>
+  <div class="search-container">
+  <input type="text"
+         [(ngModel)]="searchTerm"
+         placeholder="Search by name, department, or country"
+         class="search-input">
+</div>
 
-          <!-- Absolute update -->
-          <input type="number" [(ngModel)]="e.newSalary" placeholder="New salary" class="update-input">
-          <button class="set-btn" (click)="updateSalary(e.id, e.newSalary)">Set Salary</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <mat-paginator [length]="employees.length"
+<table class="employee-table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Department</th>
+      <th>Country</th>
+      <th>Salary</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let e of filteredEmployees">
+      <td>{{ e.id }}</td>
+      <td>{{ e.name }}</td>
+      <td>{{ e.department }}</td>
+      <td>{{ e.country }}</td>
+      <td>{{ e.salary | currency:'USD' }}</td>
+      <td>
+        <input type="number" [(ngModel)]="e.adjustment" placeholder="Adjust amount" class="adjust-input">
+        <button class="update-btn" (click)="adjustSalary(e.id, e.adjustment)">Adjust</button>
+
+        <input type="number" [(ngModel)]="e.newSalary" placeholder="New salary" class="update-input">
+        <button class="set-btn" (click)="updateSalary(e.id, e.newSalary)">Set Salary</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<mat-paginator [length]="employees.length"
                [pageSize]="pageSize"
                [pageSizeOptions]="[5, 10, 25, 50]"
                (page)="onPageChange($event)">
 </mat-paginator>
+
 </div>

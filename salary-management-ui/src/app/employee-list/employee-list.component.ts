@@ -66,4 +66,18 @@ export class EmployeeListComponent implements OnInit {
     this.loadEmployees();
     this.loadReports();
   }
+  searchTerm: string = '';
+
+  get filteredEmployees(): Employee[] {
+    if (!this.searchTerm) {
+      return this.paginatedEmployees;
+    }
+    const term = this.searchTerm.toLowerCase();
+    return this.paginatedEmployees.filter(e =>
+      e.name.toLowerCase().includes(term) ||
+      e.department.toLowerCase().includes(term) ||
+      e.country.toLowerCase().includes(term)
+    );
+  }
+
 }
