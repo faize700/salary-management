@@ -41,6 +41,5 @@ export class EmployeeService {
     getMaxSalary(dept?: string): Observable<number> {
     return this.http.get<number>(`${this.apiUrl}/report/max-salary${dept ? '?dept=' + dept : ''}`);
     }
-
-
+    
 }
