@@ -38,18 +38,29 @@
 </div>
 
 <table class="employee-table">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th>Department</th>
-      <th>Country</th>
-      <th>Salary</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
+    <thead>
+  <tr>
+    <th (click)="setSort('id')">
+      ID <span *ngIf="sortColumn === 'id'">{{ sortDirection === 'asc' ? '↑' : '↓' }}</span>
+    </th>
+    <th (click)="setSort('name')">
+      Name <span *ngIf="sortColumn === 'name'">{{ sortDirection === 'asc' ? '↑' : '↓' }}</span>
+    </th>
+    <th (click)="setSort('department')">
+      Department <span *ngIf="sortColumn === 'department'">{{ sortDirection === 'asc' ? '↑' : '↓' }}</span>
+    </th>
+    <th (click)="setSort('country')">
+      Country <span *ngIf="sortColumn === 'country'">{{ sortDirection === 'asc' ? '↑' : '↓' }}</span>
+    </th>
+    <th (click)="setSort('salary')">
+      Salary <span *ngIf="sortColumn === 'salary'">{{ sortDirection === 'asc' ? '↑' : '↓' }}</span>
+    </th>
+    <th>Actions</th>
+  </tr>
+</thead>
+
   <tbody>
-    <tr *ngFor="let e of filteredEmployees">
+    <tr *ngFor="let e of sortedEmployees">
       <td>{{ e.id }}</td>
       <td>{{ e.name }}</td>
       <td>{{ e.department }}</td>

@@ -80,4 +80,36 @@ export class EmployeeListComponent implements OnInit {
     );
   }
 
+  sortColumn: keyof Employee | null = null;
+  sortDirection: 'asc' | 'desc' = 'asc';
+
+  get sortedEmployees(): Employee[] {
+    let data = [...this.filteredEmployees];
+    if (!this.sortColumn) return data; // ✅ safe check
+
+    data.sort((a, b) => {
+      let valA: any = a[this.sortColumn!];
+      let valB: any = b[this.sortColumn!];
+
+      if (typeof valA === 'string') {
+        valA = valA.toLowerCase();
+        valB = valB.toLowerCase();
+      }
+
+      if (valA < valB) return this.sortDirection === 'asc' ? -1 : 1;
+      if (valA > valB) return this.sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    return data;
+  }
+
+  setSort(column: keyof Employee): void {
+    if (this.sortColumn === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn = column;
+      this.sortDirection = 'asc';
+    }
+  }
 }

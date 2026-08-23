@@ -176,3 +176,23 @@ mat-paginator {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+.employee-table th {
+  cursor: pointer;
+  user-select: none;
+}
+
+.employee-table th:hover {
+  background-color: #e3f2fd;
+}
+.employee-table th {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  padding-right: 20px;
+}
+
+.employee-table th span {
+  font-size: 0.8em;
+  margin-left: 5px;
+  color: #1976d2; /* Azure/Blue theme accent */
+}
