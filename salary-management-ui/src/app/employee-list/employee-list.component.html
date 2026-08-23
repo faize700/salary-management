@@ -42,7 +42,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let e of employees">
+      <tr *ngFor="let e of paginatedEmployees">
         <td>{{ e.id }}</td>
         <td>{{ e.name }}</td>
         <td>{{ e.department }}</td>
@@ -60,4 +60,9 @@
       </tr>
     </tbody>
   </table>
+  <mat-paginator [length]="employees.length"
+               [pageSize]="pageSize"
+               [pageSizeOptions]="[5, 10, 25, 50]"
+               (page)="onPageChange($event)">
+</mat-paginator>
 </div>

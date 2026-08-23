@@ -159,3 +159,8 @@ select {
   border-radius: 4px;
   border: 1px solid #ccc;
 }
+mat-paginator {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+}
