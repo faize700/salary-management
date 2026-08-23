@@ -2,15 +2,10 @@ package com.acme.salary_management.controller;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map; 
+import java.util.Map;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.acme.salary_management.entity.Employee;
 import com.acme.salary_management.service.EmployeeService;
@@ -29,10 +24,19 @@ public class EmployeeController {
         return service.findByDepartment(dept);
     }
 
+    // Delta adjustment
     @PostMapping("/{id}/adjust")
-    public void adjustSalary(@PathVariable Long id, @RequestBody Map<String, BigDecimal> payload) {
+    public ResponseEntity<Void> adjustSalary(@PathVariable Long id, @RequestBody Map<String, BigDecimal> payload) {
         BigDecimal adjustment = payload.get("salary");
         service.adjustSalary(id, adjustment);
+        return ResponseEntity.ok().build();
     }
 
+    // Absolute update
+    @PostMapping("/{id}/update")
+    public ResponseEntity<Void> updateSalary(@PathVariable Long id, @RequestBody Map<String, BigDecimal> payload) {
+        BigDecimal newSalary = payload.get("salary");
+        service.updateSalary(id, newSalary);
+        return ResponseEntity.ok().build();
+    }
 }

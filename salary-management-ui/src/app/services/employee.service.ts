@@ -8,6 +8,8 @@ export interface Employee {
   department: string;
   country: string;
   salary: number;
+  adjustment: number;   // delta adjustment
+  newSalary: number;    // absolute update
 }
 
 @Injectable({ providedIn: 'root' })
@@ -20,7 +22,11 @@ export class EmployeeService {
     return this.http.get<Employee[]>(`${this.apiUrl}${dept ? '?dept=' + dept : ''}`);
   }
 
-  adjustSalary(id: number, salary: number): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/${id}/adjust`, { salary });
+  adjustSalary(id: number, adjustment: number): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/${id}/adjust`, { salary: adjustment });
+  }
+
+  updateSalary(id: number, newSalary: number): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/${id}/update`, { salary: newSalary });
   }
 }

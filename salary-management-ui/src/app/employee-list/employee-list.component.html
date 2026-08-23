@@ -1,6 +1,7 @@
-<div>
+<div class="employee-container">
   <h2>Employee List</h2>
-  <table>
+
+  <table class="employee-table">
     <thead>
       <tr>
         <th>ID</th>
@@ -8,7 +9,7 @@
         <th>Department</th>
         <th>Country</th>
         <th>Salary</th>
-        <th>Adjust</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -17,10 +18,15 @@
         <td>{{ e.name }}</td>
         <td>{{ e.department }}</td>
         <td>{{ e.country }}</td>
-        <td>{{ e.salary }}</td>
+        <td>{{ e.salary | currency:'USD' }}</td>
         <td>
-          <input type="number" [(ngModel)]="adjustment" placeholder="Amount">
-          <button (click)="adjustSalary(e.id)">Update</button>
+          <!-- Delta adjustment -->
+          <input type="number" [(ngModel)]="e.adjustment" placeholder="Adjust amount" class="adjust-input">
+          <button class="update-btn" (click)="adjustSalary(e.id, e.adjustment)">Adjust</button>
+
+          <!-- Absolute update -->
+          <input type="number" [(ngModel)]="e.newSalary" placeholder="New salary" class="update-input">
+          <button class="set-btn" (click)="updateSalary(e.id, e.newSalary)">Set Salary</button>
         </td>
       </tr>
     </tbody>

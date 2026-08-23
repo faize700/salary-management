@@ -19,10 +19,19 @@ public class EmployeeService {
         return dept == null ? repo.findAll() : repo.findByDepartment(dept);
     }
 
+    // Delta adjustment
     public void adjustSalary(Long id, BigDecimal adjustment) {
         Employee emp = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
         emp.setSalary(emp.getSalary().add(adjustment));
+        repo.save(emp);
+    }
+
+    // Absolute update
+    public void updateSalary(Long id, BigDecimal newSalary) {
+        Employee emp = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
+        emp.setSalary(newSalary);
         repo.save(emp);
     }
 }

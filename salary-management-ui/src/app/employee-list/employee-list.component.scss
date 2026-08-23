@@ -1,0 +1,126 @@
+.employee-container {
+  padding: 20px;
+}
+
+.employee-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.employee-table th,
+.employee-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.employee-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.adjust-input {
+  width: 80px;
+  padding: 5px;
+  margin-right: 8px;
+}
+
+.update-btn {
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.update-btn:hover {
+  background-color: #1565c0;
+}
+.employee-table td:nth-child(5) {
+  font-weight: 600;
+  color: #2e7d32; // green for salary
+}
+
+.adjust-input {
+  width: 100px;
+  padding: 6px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.update-btn {
+  background-color: #1976d2;
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.update-btn:hover {
+  background-color: #1565c0;
+}
+.employee-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.employee-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.employee-table th,
+.employee-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+}
+
+.employee-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+  color: #333;
+}
+
+.employee-table td:nth-child(5) {
+  font-weight: 600;
+  color: #2e7d32; // green for salary
+}
+
+.adjust-input,
+.update-input {
+  width: 100px;
+  padding: 6px;
+  margin-right: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.update-btn,
+.set-btn {
+  background-color: #1976d2;
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-right: 6px;
+}
+
+.update-btn:hover,
+.set-btn:hover {
+  background-color: #1565c0;
+}
+
+.update-btn:active,
+.set-btn:active {
+  background-color: #0d47a1;
+}
