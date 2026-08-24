@@ -4,10 +4,18 @@ A full-stack Employee Salary Management System built with **Spring Boot (Java)**
 
 ## Features
 
-* Manage employees with ID, name, department, country, and salary
-* Adjust employee salaries interactively from the UI
-* Backend REST API with CORS enabled
-* Seed script for generating large employee datasets
+- Manage employees with ID, name, department, country, and salary
+- Server-side pagination for 10,000 employees
+- Employee search, department filtering, and sorting
+- Individual salary adjustment and absolute salary updates
+- Bulk salary adjustments
+- Salary analytics: average, minimum, and maximum salary
+- Employee create, edit, and delete
+- CSV export
+- Backend REST API with validation and CORS support
+- Audit logging for important salary-management actions
+- Seeded dataset of 10,000 employees
+
 
 ## Tech Stack
 
@@ -46,13 +54,14 @@ The frontend runs at:
 
 ```text
 salary-management/
-├── src/                    # Spring Boot backend
-│
-├── salary-management-ui/  # Angular frontend
-│
-├── seed.py                # Employee dataset generator
-│
-└── requirements.md        # Assessment requirements
+├── src/                         # Spring Boot backend
+├── salary-management-ui/        # Angular frontend
+├── docs/                        # Assessment engineering artifacts
+├── README.md                    # Project documentation
+├── README-submission-section.md # Assessment submission details
+├── seed.py                      # Employee dataset generator
+├── Dockerfile                   # Docker File
+└── pom.xml                      # Maven configuration
 ```
 
 ## API
@@ -70,3 +79,27 @@ http://localhost:8081/api/employees
 * The backend can be configured to use either **H2** for local development or **PostgreSQL** for persistent storage.
 * The Angular frontend communicates with the Spring Boot REST API.
 * `seed.py` can be used to generate a large dataset for testing and performance evaluation.
+
+
+## Live Demo
+
+**Application:** https://salary-management-ui-ue95.onrender.com
+
+**Backend API:** https://salary-management-backend-2pgq.onrender.com
+
+**Repository:** https://github.com/faize700/salary-management
+
+The application is deployed with an Angular frontend, Spring Boot backend and PostgreSQL database, with a seeded dataset of 10,000 employees.
+
+## Assessment Documentation
+
+Engineering artifacts for the Incubyte assessment are available in:
+
+- `README-submission-section.md`
+- `docs/requirements.md`
+- `docs/architecture.md`
+- `docs/ai-development.md`
+- `docs/trade-offs.md`
+- `docs/performance.md`
+- `docs/demo-script.md`
+- `docs/submission-checklist.md`

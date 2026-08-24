@@ -1,5 +1,7 @@
 # Incubyte Submission Checklist
 
+## Assessment Requirements
+
 - [x] Java/Spring Boot backend
 - [x] Angular UI
 - [x] Relational database
@@ -24,13 +26,20 @@
 - [x] Performance artifact
 - [x] Demo script
 
-## Before submitting
-- [ ] Deploy backend
-- [ ] Deploy Angular frontend
-- [ ] Replace localhost API URL with deployed backend URL
-- [ ] Verify deployed application end-to-end
-- [ ] Record demo video
-- [ ] Add live URL and demo URL to README
-- [ ] Commit and push documentation
-- [ ] Confirm `git status` is clean
-- [ ] Send repository, live application and demo links to Incubyte
+## Deployment Verification
+
+- [x] Backend deployed
+- [x] Angular frontend deployed
+- [x] Production PostgreSQL configured
+- [x] Production backend URL configured in Angular
+- [x] Backend API verified with 10,000 employees
+- [x] Frontend verified against deployed backend
+- [x] Production application accessible
+
+## Final Submission
+
+- [x] Live application URL added to submission documentation
+- [x] Documentation committed and pushed
+- [x] Git working tree clean
+- [x] Incremental commit history preserved
+- [x] Final submission email sent to Incubyte
