@@ -44,8 +44,6 @@
       </div>
 
 
-      <!-- Department Filter -->
-
       <div class="department-filter">
 
         <label for="dept">
@@ -88,12 +86,7 @@
     </div>
 
 
-    <!-- Report Cards -->
-
     <div class="report-cards">
-
-
-      <!-- Average Salary -->
 
       <div class="report-card average-card">
 
@@ -120,8 +113,6 @@
       </div>
 
 
-      <!-- Minimum Salary -->
-
       <div class="report-card minimum-card">
 
         <div class="report-icon">
@@ -146,8 +137,6 @@
 
       </div>
 
-
-      <!-- Maximum Salary -->
 
       <div class="report-card maximum-card">
 
@@ -218,80 +207,83 @@
       <div class="loading-progress"></div>
 
     </div>
+
+
     <!-- =====================================================
-        BULK SALARY ACTIONS
-        ===================================================== -->
+         BULK SALARY ACTIONS
+         ===================================================== -->
 
     <div
-    *ngIf="selectedCount > 0"
-    class="bulk-action-bar">
+      *ngIf="selectedCount > 0"
+      class="bulk-action-bar">
 
-    <div class="bulk-selection-info">
+      <div class="bulk-selection-info">
 
         <div class="bulk-check-icon">
-        ✓
+          ✓
         </div>
 
         <div>
 
-        <strong>
+          <strong>
             {{ selectedCount }}
             {{ selectedCount === 1 ? 'employee' : 'employees' }}
             selected
-        </strong>
+          </strong>
 
-        <span>
+          <span>
             Select employees from the current page
-        </span>
+          </span>
 
         </div>
 
-    </div>
+      </div>
 
 
-    <div class="bulk-action-controls">
+      <div class="bulk-action-controls">
 
         <input
-        type="number"
-        [(ngModel)]="bulkAdjustment"
-        placeholder="Adjustment amount"
-        class="bulk-adjustment-input"
-        [disabled]="isBulkProcessing">
+          type="number"
+          [(ngModel)]="bulkAdjustment"
+          placeholder="Adjustment amount"
+          class="bulk-adjustment-input"
+          [disabled]="isBulkProcessing">
 
 
         <button
-        type="button"
-        class="bulk-apply-btn"
-        [disabled]="
+          type="button"
+          class="bulk-apply-btn"
+          [disabled]="
             isBulkProcessing ||
             bulkAdjustment === 0
-        "
-        (click)="applyBulkAdjustment()">
+          "
+          (click)="applyBulkAdjustment()">
 
-        <span *ngIf="!isBulkProcessing">
+          <span *ngIf="!isBulkProcessing">
             Apply Adjustment
-        </span>
+          </span>
 
-        <span *ngIf="isBulkProcessing">
+          <span *ngIf="isBulkProcessing">
             Applying...
-        </span>
+          </span>
 
         </button>
 
 
         <button
-        type="button"
-        class="bulk-clear-btn"
-        [disabled]="isBulkProcessing"
-        (click)="clearSelection()">
+          type="button"
+          class="bulk-clear-btn"
+          [disabled]="isBulkProcessing"
+          (click)="clearSelection()">
 
-        Clear
+          Clear
 
         </button>
 
-    </div>
+      </div>
 
     </div>
+
 
     <!-- ===================================================
          EMPLOYEE HEADER
@@ -299,8 +291,6 @@
 
     <div class="employee-header">
 
-
-      <!-- Title -->
 
       <div class="section-title">
 
@@ -318,8 +308,6 @@
 
       </div>
 
-
-      <!-- Search + Export -->
 
       <div class="table-actions">
 
@@ -370,6 +358,23 @@
 
         </button>
 
+
+        <!-- Add Employee -->
+
+        <button
+          class="add-employee-btn"
+          type="button"
+          [disabled]="isUpdating"
+          (click)="openAddEmployeeModal()">
+
+          <span class="add-icon">
+            +
+          </span>
+
+          Add Employee
+
+        </button>
+
       </div>
 
     </div>
@@ -390,17 +395,24 @@
 
           <tr>
 
+
             <!-- Select all -->
+
             <th class="selection-column">
 
-            <input
+              <input
                 type="checkbox"
                 [checked]="isAllPageSelected"
                 (change)="toggleSelectAll()"
-                [disabled]="isLoading || employees.length === 0"
+                [disabled]="
+                  isLoading ||
+                  employees.length === 0 ||
+                  isUpdating
+                "
                 aria-label="Select all employees on this page">
 
             </th>
+
 
             <!-- ID -->
 
@@ -527,9 +539,7 @@
             <!-- Actions -->
 
             <th class="actions-column">
-
               Actions
-
             </th>
 
           </tr>
@@ -543,14 +553,17 @@
 
         <tbody>
 
-        <tr
+
+          <tr
             *ngFor="let e of sortedEmployees"
             class="employee-row">
 
+
             <!-- Selection -->
+
             <td class="selection-cell">
 
-            <input
+              <input
                 type="checkbox"
                 [checked]="isEmployeeSelected(e.id)"
                 (change)="toggleEmployeeSelection(e.id)"
@@ -559,29 +572,34 @@
 
             </td>
 
+
             <!-- ID -->
+
             <td class="employee-id">
 
-            #{{ e.id }}
+              #{{ e.id }}
 
             </td>
 
+
             <!-- Employee -->
+
             <td>
 
-            <div class="employee-info">
+              <div class="employee-info">
 
                 <div class="avatar">
-                {{ e.name.charAt(0).toUpperCase() }}
+                  {{ e.name.charAt(0).toUpperCase() }}
                 </div>
 
                 <div class="employee-name">
-                {{ e.name }}
+                  {{ e.name }}
                 </div>
 
-            </div>
+              </div>
 
             </td>
+
 
             <!-- Department -->
 
@@ -641,16 +659,44 @@
             </td>
 
 
-            <!-- =================================================
-                 SALARY ACTIONS
-                 ================================================= -->
+            <!-- Actions -->
 
             <td>
 
+              <div class="employee-actions">
+
+                <button
+                  type="button"
+                  class="edit-btn"
+                  [disabled]="isUpdating"
+                  (click)="openEditEmployeeModal(e)"
+                  title="Edit employee">
+
+                  ✎
+                  Edit
+
+                </button>
+
+
+                <button
+                  type="button"
+                  class="delete-btn"
+                  [disabled]="isUpdating"
+                  (click)="openDeleteConfirmation(e)"
+                  title="Delete employee">
+
+                  ×
+                  Delete
+
+                </button>
+
+              </div>
+
+
+              <!-- Salary Actions -->
+
               <div class="salary-actions">
 
-
-                <!-- Salary Adjustment -->
 
                 <div class="action-group">
 
@@ -677,8 +723,6 @@
 
                 </div>
 
-
-                <!-- Absolute Salary -->
 
                 <div class="action-group">
 
@@ -723,27 +767,20 @@
             ">
 
             <td
-              colspan="6"
+              colspan="7"
               class="empty-state">
 
-
               <div class="empty-icon">
-
                 ⌕
-
               </div>
-
 
               <h3>
                 No employees found
               </h3>
 
-
               <p>
-
                 Try changing your search
                 or filter criteria.
-
               </p>
 
             </td>
@@ -764,8 +801,6 @@
 
     <div class="table-footer">
 
-
-      <!-- Summary -->
 
       <div class="table-summary">
 
@@ -792,8 +827,6 @@
       </div>
 
 
-      <!-- Paginator -->
-
       <mat-paginator
 
         [length]="totalEmployees"
@@ -812,5 +845,299 @@
     </div>
 
   </section>
+
+</div>
+
+
+<!-- =========================================================
+     ADD / EDIT EMPLOYEE MODAL
+     ========================================================= -->
+
+<div
+  *ngIf="showEmployeeModal"
+  class="modal-overlay"
+  (click)="closeEmployeeModal()">
+
+  <div
+    class="employee-modal"
+    (click)="$event.stopPropagation()">
+
+
+    <!-- Modal Header -->
+
+    <div class="modal-header">
+
+      <div>
+
+        <h2>
+          {{
+            isEditMode
+              ? 'Edit Employee'
+              : 'Add Employee'
+          }}
+        </h2>
+
+        <p>
+          {{
+            isEditMode
+              ? 'Update employee information'
+              : 'Create a new employee record'
+          }}
+        </p>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="modal-close-btn"
+        [disabled]="isSavingEmployee"
+        (click)="closeEmployeeModal()"
+        aria-label="Close">
+
+        ×
+
+      </button>
+
+    </div>
+
+
+    <!-- Modal Body -->
+
+    <div class="modal-body">
+
+
+      <!-- Name -->
+
+      <div class="form-group">
+
+        <label for="employeeName">
+          Employee Name
+          <span>*</span>
+        </label>
+
+        <input
+          id="employeeName"
+          type="text"
+          [(ngModel)]="employeeForm.name"
+          placeholder="Enter employee name"
+          maxlength="100"
+          [disabled]="isSavingEmployee"
+          autocomplete="off">
+
+      </div>
+
+
+      <!-- Department -->
+
+      <div class="form-group">
+
+        <label for="employeeDepartment">
+          Department
+          <span>*</span>
+        </label>
+
+        <select
+          id="employeeDepartment"
+          [(ngModel)]="employeeForm.department"
+          [disabled]="isSavingEmployee">
+
+          <option value="">
+            Select department
+          </option>
+
+          <option
+            *ngFor="let department of departments"
+            [value]="department">
+
+            {{ department }}
+
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- Country -->
+
+      <div class="form-group">
+
+        <label for="employeeCountry">
+          Country
+          <span>*</span>
+        </label>
+
+        <select
+          id="employeeCountry"
+          [(ngModel)]="employeeForm.country"
+          [disabled]="isSavingEmployee">
+
+          <option value="">
+            Select country
+          </option>
+
+          <option
+            *ngFor="let country of countries"
+            [value]="country">
+
+            {{ country }}
+
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- Salary -->
+
+      <div class="form-group">
+
+        <label for="employeeSalary">
+          Salary
+          <span>*</span>
+        </label>
+
+        <div class="salary-form-input">
+
+          <span>
+            $
+          </span>
+
+          <input
+            id="employeeSalary"
+            type="number"
+            [(ngModel)]="employeeForm.salary"
+            placeholder="Enter salary"
+            min="1"
+            step="0.01"
+            [disabled]="isSavingEmployee">
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- Modal Footer -->
+
+    <div class="modal-footer">
+
+      <button
+        type="button"
+        class="modal-cancel-btn"
+        [disabled]="isSavingEmployee"
+        (click)="closeEmployeeModal()">
+
+        Cancel
+
+      </button>
+
+
+      <button
+        type="button"
+        class="modal-save-btn"
+        [disabled]="isSavingEmployee"
+        (click)="saveEmployee()">
+
+        <span *ngIf="!isSavingEmployee">
+
+          {{
+            isEditMode
+              ? 'Save Changes'
+              : 'Create Employee'
+          }}
+
+        </span>
+
+        <span *ngIf="isSavingEmployee">
+
+          Saving...
+
+        </span>
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================================================
+     DELETE CONFIRMATION MODAL
+     ========================================================= -->
+
+<div
+  *ngIf="showDeleteModal"
+  class="modal-overlay"
+  (click)="closeDeleteConfirmation()">
+
+  <div
+    class="delete-modal"
+    (click)="$event.stopPropagation()">
+
+
+    <div class="delete-icon">
+      !
+    </div>
+
+
+    <h2>
+      Delete Employee?
+    </h2>
+
+
+    <p>
+
+      Are you sure you want to delete
+
+      <strong>
+        {{ employeeBeingDeleted?.name }}
+      </strong>?
+
+    </p>
+
+
+    <span class="delete-warning">
+      This action cannot be undone.
+    </span>
+
+
+    <div class="delete-modal-actions">
+
+      <button
+        type="button"
+        class="modal-cancel-btn"
+        [disabled]="isDeletingEmployee"
+        (click)="closeDeleteConfirmation()">
+
+        Cancel
+
+      </button>
+
+
+      <button
+        type="button"
+        class="confirm-delete-btn"
+        [disabled]="isDeletingEmployee"
+        (click)="confirmDeleteEmployee()">
+
+        <span *ngIf="!isDeletingEmployee">
+          Delete Employee
+        </span>
+
+        <span *ngIf="isDeletingEmployee">
+          Deleting...
+        </span>
+
+      </button>
+
+    </div>
+
+  </div>
 
 </div>

@@ -14,6 +14,13 @@ export interface Employee {
   newSalary: number;
 }
 
+export interface EmployeeRequest {
+  name: string;
+  department: string;
+  country: string;
+  salary: number;
+}
+
 export interface EmployeePage {
   content: Employee[];
   totalElements: number;
@@ -35,8 +42,8 @@ export class EmployeeService {
   constructor(private http: HttpClient) {}
 
   /**
-   * Server-side employee search, filtering,
-   * pagination and sorting.
+   * Server-side employee search,
+   * filtering, pagination and sorting.
    */
   getEmployees(
     page: number = 0,
@@ -63,6 +70,54 @@ export class EmployeeService {
     return this.http.get<EmployeePage>(
       this.apiUrl,
       { params }
+    );
+  }
+
+  /**
+   * Get employee by ID.
+   */
+  getEmployee(id: number): Observable<Employee> {
+    return this.http.get<Employee>(
+      `${this.apiUrl}/${id}`
+    );
+  }
+
+  /**
+   * Create employee.
+   */
+  createEmployee(
+    employee: EmployeeRequest
+  ): Observable<Employee> {
+
+    return this.http.post<Employee>(
+      this.apiUrl,
+      employee
+    );
+  }
+
+  /**
+   * Update employee.
+   */
+  updateEmployee(
+    id: number,
+    employee: EmployeeRequest
+  ): Observable<Employee> {
+
+    return this.http.put<Employee>(
+      `${this.apiUrl}/${id}`,
+      employee
+    );
+  }
+
+  /**
+   * Delete employee.
+   */
+  deleteEmployee(
+    id: number
+  ): Observable<void> {
+
+    return this.http.delete<void>(
+      `${this.apiUrl}/${id}`
     );
   }
 
@@ -149,23 +204,26 @@ export class EmployeeService {
     );
   }
 
+  /**
+   * Bulk salary adjustment.
+   */
   bulkAdjustSalary(
     employeeIds: number[],
     adjustment: number
-    ): Observable<{
+  ): Observable<{
     message: string;
     updatedEmployees: number;
-    }> {
+  }> {
+
     return this.http.post<{
-        message: string;
-        updatedEmployees: number;
+      message: string;
+      updatedEmployees: number;
     }>(
-        `${this.apiUrl}/bulk-adjust`,
-        {
+      `${this.apiUrl}/bulk-adjust`,
+      {
         employeeIds,
         adjustment
-        }
+      }
     );
-    }
-
+  }
 }

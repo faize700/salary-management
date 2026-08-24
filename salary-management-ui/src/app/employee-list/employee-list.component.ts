@@ -6,7 +6,8 @@ import {
 
 import {
   EmployeeService,
-  Employee
+  Employee,
+  EmployeeRequest
 } from '../services/employee.service';
 
 import { FormsModule } from '@angular/forms';
@@ -63,14 +64,12 @@ export class EmployeeListComponent
   totalEmployees = 0;
   totalPages = 0;
 
-
   // =========================================================
   // Search / Filter
   // =========================================================
 
   searchTerm = '';
   selectedDept = '';
-
 
   // =========================================================
   // Sorting
@@ -79,7 +78,6 @@ export class EmployeeListComponent
   sortColumn = 'id';
   sortDirection: 'asc' | 'desc' = 'asc';
 
-
   // =========================================================
   // Analytics
   // =========================================================
@@ -87,7 +85,6 @@ export class EmployeeListComponent
   averageSalary = 0;
   minSalary = 0;
   maxSalary = 0;
-
 
   // =========================================================
   // UI State
@@ -99,6 +96,47 @@ export class EmployeeListComponent
   errorMessage = '';
   successMessage = '';
 
+  // =========================================================
+  // CRUD
+  // =========================================================
+
+  showEmployeeModal = false;
+  showDeleteModal = false;
+
+  isEditMode = false;
+  isSavingEmployee = false;
+  isDeletingEmployee = false;
+
+  employeeBeingDeleted: Employee | null = null;
+
+  employeeForm: EmployeeRequest = {
+    name: '',
+    department: '',
+    country: '',
+    salary: 0
+  };
+
+  editingEmployeeId: number | null = null;
+
+  // =========================================================
+  // Dropdown options
+  // =========================================================
+
+  readonly departments = [
+    'HR',
+    'Engineering',
+    'Finance',
+    'Marketing',
+    'Sales'
+  ];
+
+  readonly countries = [
+    'India',
+    'USA',
+    'UK',
+    'Brazil',
+    'Germany'
+  ];
 
   // =========================================================
   // Bulk Salary Operations
@@ -110,7 +148,6 @@ export class EmployeeListComponent
 
   isBulkProcessing = false;
 
-
   // =========================================================
   // RxJS
   // =========================================================
@@ -121,11 +158,9 @@ export class EmployeeListComponent
   private readonly searchSubject =
     new Subject<string>();
 
-
   constructor(
     private employeeService: EmployeeService
   ) {}
-
 
   // =========================================================
   // INIT
@@ -149,12 +184,9 @@ export class EmployeeListComponent
         this.loadEmployees();
       });
 
-
     this.loadEmployees();
-
     this.loadReports();
   }
-
 
   // =========================================================
   // LOAD EMPLOYEES
@@ -163,7 +195,6 @@ export class EmployeeListComponent
   loadEmployees(): void {
 
     this.isLoading = true;
-
     this.errorMessage = '';
 
     this.employeeService
@@ -185,9 +216,7 @@ export class EmployeeListComponent
           this.employees =
             response.content.map(employee => ({
               ...employee,
-
               adjustment: 0,
-
               newSalary: employee.salary
             }));
 
@@ -218,16 +247,13 @@ export class EmployeeListComponent
       });
   }
 
-
   // =========================================================
   // SEARCH
   // =========================================================
 
   onSearchChange(value: string): void {
-
     this.searchSubject.next(value);
   }
-
 
   // =========================================================
   // DEPARTMENT
@@ -240,10 +266,8 @@ export class EmployeeListComponent
     this.clearSelection();
 
     this.loadEmployees();
-
     this.loadReports();
   }
-
 
   // =========================================================
   // PAGINATION
@@ -261,7 +285,6 @@ export class EmployeeListComponent
 
     this.loadEmployees();
   }
-
 
   // =========================================================
   // SORTING
@@ -281,7 +304,6 @@ export class EmployeeListComponent
     } else {
 
       this.sortColumn = column;
-
       this.sortDirection = 'asc';
     }
 
@@ -292,6 +314,313 @@ export class EmployeeListComponent
     this.loadEmployees();
   }
 
+  // =========================================================
+  // CREATE / EDIT EMPLOYEE
+  // =========================================================
+
+  openAddEmployeeModal(): void {
+
+    this.clearMessages();
+
+    this.isEditMode = false;
+
+    this.editingEmployeeId = null;
+
+    this.employeeForm = {
+      name: '',
+      department: '',
+      country: '',
+      salary: 0
+    };
+
+    this.showEmployeeModal = true;
+  }
+
+  openEditEmployeeModal(
+    employee: Employee
+  ): void {
+
+    this.clearMessages();
+
+    this.isEditMode = true;
+
+    this.editingEmployeeId =
+      employee.id;
+
+    this.employeeForm = {
+      name: employee.name,
+      department: employee.department,
+      country: employee.country,
+      salary: employee.salary
+    };
+
+    this.showEmployeeModal = true;
+  }
+
+  closeEmployeeModal(): void {
+
+    if (this.isSavingEmployee) {
+      return;
+    }
+
+    this.showEmployeeModal = false;
+
+    this.editingEmployeeId = null;
+  }
+
+  saveEmployee(): void {
+
+    const validationError =
+      this.validateEmployeeForm();
+
+    if (validationError) {
+
+      this.showError(
+        validationError
+      );
+
+      return;
+    }
+
+    const request: EmployeeRequest = {
+      name: this.employeeForm.name.trim(),
+      department: this.employeeForm.department.trim(),
+      country: this.employeeForm.country.trim(),
+      salary: Number(this.employeeForm.salary)
+    };
+
+    this.isSavingEmployee = true;
+    this.isUpdating = true;
+
+    this.clearMessages();
+
+    if (
+      this.isEditMode &&
+      this.editingEmployeeId !== null
+    ) {
+
+      this.employeeService
+        .updateEmployee(
+          this.editingEmployeeId,
+          request
+        )
+        .pipe(
+          takeUntil(this.destroy$)
+        )
+        .subscribe({
+
+          next: () => {
+
+            this.isSavingEmployee = false;
+            this.isUpdating = false;
+
+            this.showEmployeeModal = false;
+
+            this.showSuccess(
+              'Employee updated successfully.'
+            );
+
+            this.loadEmployees();
+            this.loadReports();
+          },
+
+          error: error => {
+
+            this.isSavingEmployee = false;
+            this.isUpdating = false;
+
+            this.showError(
+              this.getErrorMessage(
+                error,
+                'Unable to update employee.'
+              )
+            );
+          }
+        });
+
+    } else {
+
+      this.employeeService
+        .createEmployee(request)
+        .pipe(
+          takeUntil(this.destroy$)
+        )
+        .subscribe({
+
+          next: () => {
+
+            this.isSavingEmployee = false;
+            this.isUpdating = false;
+
+            this.showEmployeeModal = false;
+
+            this.showSuccess(
+              'Employee created successfully.'
+            );
+
+            this.pageIndex = 0;
+
+            this.loadEmployees();
+            this.loadReports();
+          },
+
+          error: error => {
+
+            this.isSavingEmployee = false;
+            this.isUpdating = false;
+
+            this.showError(
+              this.getErrorMessage(
+                error,
+                'Unable to create employee.'
+              )
+            );
+          }
+        });
+    }
+  }
+
+  // =========================================================
+  // DELETE EMPLOYEE
+  // =========================================================
+
+  openDeleteConfirmation(
+    employee: Employee
+  ): void {
+
+    this.clearMessages();
+
+    this.employeeBeingDeleted =
+      employee;
+
+    this.showDeleteModal = true;
+  }
+
+  closeDeleteConfirmation(): void {
+
+    if (this.isDeletingEmployee) {
+      return;
+    }
+
+    this.showDeleteModal = false;
+
+    this.employeeBeingDeleted = null;
+  }
+
+  confirmDeleteEmployee(): void {
+
+    if (
+      !this.employeeBeingDeleted
+    ) {
+      return;
+    }
+
+    const employeeId =
+      this.employeeBeingDeleted.id;
+
+    this.isDeletingEmployee = true;
+    this.isUpdating = true;
+
+    this.clearMessages();
+
+    this.employeeService
+      .deleteEmployee(employeeId)
+      .pipe(
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+
+        next: () => {
+
+          this.isDeletingEmployee = false;
+          this.isUpdating = false;
+
+          this.showDeleteModal = false;
+
+          this.selectedEmployeeIds.delete(
+            employeeId
+          );
+
+          this.employeeBeingDeleted = null;
+
+          this.showSuccess(
+            'Employee deleted successfully.'
+          );
+
+          /*
+           * If the last employee on the current
+           * page was deleted, move back one page.
+           */
+          if (
+            this.employees.length === 1 &&
+            this.pageIndex > 0
+          ) {
+            this.pageIndex--;
+          }
+
+          this.loadEmployees();
+          this.loadReports();
+        },
+
+        error: error => {
+
+          this.isDeletingEmployee = false;
+          this.isUpdating = false;
+
+          this.showError(
+            this.getErrorMessage(
+              error,
+              'Unable to delete employee.'
+            )
+          );
+        }
+      });
+  }
+
+  // =========================================================
+  // EMPLOYEE FORM VALIDATION
+  // =========================================================
+
+  private validateEmployeeForm():
+    string | null {
+
+    const name =
+      this.employeeForm.name?.trim();
+
+    const department =
+      this.employeeForm.department?.trim();
+
+    const country =
+      this.employeeForm.country?.trim();
+
+    const salary =
+      Number(this.employeeForm.salary);
+
+    if (!name) {
+      return 'Employee name is required.';
+    }
+
+    if (name.length < 2) {
+      return 'Employee name must contain at least 2 characters.';
+    }
+
+    if (!department) {
+      return 'Please select a department.';
+    }
+
+    if (!country) {
+      return 'Please select a country.';
+    }
+
+    if (
+      Number.isNaN(salary) ||
+      salary <= 0
+    ) {
+      return 'Salary must be greater than zero.';
+    }
+
+    return null;
+  }
 
   // =========================================================
   // INDIVIDUAL SALARY ADJUSTMENT
@@ -316,22 +645,18 @@ export class EmployeeListComponent
       return;
     }
 
-
     const confirmed =
       window.confirm(
         `Apply a salary adjustment of ${this.formatAmount(adjustment)}?`
       );
 
-
     if (!confirmed) {
       return;
     }
 
-
     this.isUpdating = true;
 
     this.clearMessages();
-
 
     this.employeeService
       .adjustSalary(
@@ -352,7 +677,6 @@ export class EmployeeListComponent
           );
 
           this.loadEmployees();
-
           this.loadReports();
         },
 
@@ -369,7 +693,6 @@ export class EmployeeListComponent
         }
       });
   }
-
 
   // =========================================================
   // INDIVIDUAL ABSOLUTE SALARY UPDATE
@@ -394,22 +717,18 @@ export class EmployeeListComponent
       return;
     }
 
-
     const confirmed =
       window.confirm(
         `Set salary to ${this.formatAmount(newSalary)}?`
       );
 
-
     if (!confirmed) {
       return;
     }
 
-
     this.isUpdating = true;
 
     this.clearMessages();
-
 
     this.employeeService
       .updateSalary(
@@ -430,7 +749,6 @@ export class EmployeeListComponent
           );
 
           this.loadEmployees();
-
           this.loadReports();
         },
 
@@ -448,7 +766,6 @@ export class EmployeeListComponent
       });
   }
 
-
   // =========================================================
   // BULK SELECTION
   // =========================================================
@@ -458,7 +775,9 @@ export class EmployeeListComponent
   ): void {
 
     if (
-      this.selectedEmployeeIds.has(employeeId)
+      this.selectedEmployeeIds.has(
+        employeeId
+      )
     ) {
 
       this.selectedEmployeeIds.delete(
@@ -473,7 +792,6 @@ export class EmployeeListComponent
     }
   }
 
-
   isEmployeeSelected(
     employeeId: number
   ): boolean {
@@ -482,7 +800,6 @@ export class EmployeeListComponent
       employeeId
     );
   }
-
 
   toggleSelectAll(): void {
 
@@ -508,7 +825,6 @@ export class EmployeeListComponent
     }
   }
 
-
   get isAllPageSelected(): boolean {
 
     return (
@@ -522,12 +838,10 @@ export class EmployeeListComponent
     );
   }
 
-
   get selectedCount(): number {
 
     return this.selectedEmployeeIds.size;
   }
-
 
   clearSelection(): void {
 
@@ -535,7 +849,6 @@ export class EmployeeListComponent
 
     this.bulkAdjustment = 0;
   }
-
 
   // =========================================================
   // BULK SALARY ADJUSTMENT
@@ -554,10 +867,8 @@ export class EmployeeListComponent
       return;
     }
 
-
     const adjustment =
       Number(this.bulkAdjustment);
-
 
     if (
       Number.isNaN(adjustment) ||
@@ -571,10 +882,8 @@ export class EmployeeListComponent
       return;
     }
 
-
     const selectedCount =
       this.selectedEmployeeIds.size;
-
 
     const confirmed =
       window.confirm(
@@ -583,18 +892,14 @@ export class EmployeeListComponent
         `${selectedCount === 1 ? 'employee' : 'employees'}?`
       );
 
-
     if (!confirmed) {
       return;
     }
 
-
     this.isBulkProcessing = true;
-
     this.isUpdating = true;
 
     this.clearMessages();
-
 
     this.employeeService
       .bulkAdjustSalary(
@@ -611,30 +916,23 @@ export class EmployeeListComponent
         next: response => {
 
           this.isBulkProcessing = false;
-
           this.isUpdating = false;
-
 
           this.showSuccess(
             response.message ||
             `${response.updatedEmployees} employees updated successfully.`
           );
 
-
           this.clearSelection();
 
-
           this.loadEmployees();
-
           this.loadReports();
         },
 
         error: error => {
 
           this.isBulkProcessing = false;
-
           this.isUpdating = false;
-
 
           this.showError(
             this.getErrorMessage(
@@ -645,7 +943,6 @@ export class EmployeeListComponent
         }
       });
   }
-
 
   // =========================================================
   // REPORTS
@@ -663,12 +960,12 @@ export class EmployeeListComponent
       .subscribe({
 
         next: value =>
-          this.averageSalary = value ?? 0,
+          this.averageSalary =
+            value ?? 0,
 
         error: () =>
           this.averageSalary = 0
       });
-
 
     this.employeeService
       .getMinSalary(
@@ -680,12 +977,12 @@ export class EmployeeListComponent
       .subscribe({
 
         next: value =>
-          this.minSalary = value ?? 0,
+          this.minSalary =
+            value ?? 0,
 
         error: () =>
           this.minSalary = 0
       });
-
 
     this.employeeService
       .getMaxSalary(
@@ -697,13 +994,13 @@ export class EmployeeListComponent
       .subscribe({
 
         next: value =>
-          this.maxSalary = value ?? 0,
+          this.maxSalary =
+            value ?? 0,
 
         error: () =>
           this.maxSalary = 0
       });
   }
-
 
   // =========================================================
   // CSV EXPORT
@@ -720,7 +1017,6 @@ export class EmployeeListComponent
       return;
     }
 
-
     const headers = [
       'ID',
       'Name',
@@ -728,7 +1024,6 @@ export class EmployeeListComponent
       'Country',
       'Salary'
     ];
-
 
     const rows =
       this.employees.map(employee => [
@@ -750,7 +1045,6 @@ export class EmployeeListComponent
         employee.salary
       ]);
 
-
     const csvContent = [
 
       headers.join(','),
@@ -761,7 +1055,6 @@ export class EmployeeListComponent
 
     ].join('\n');
 
-
     const blob =
       new Blob(
         [csvContent],
@@ -771,20 +1064,16 @@ export class EmployeeListComponent
         }
       );
 
-
     const url =
       URL.createObjectURL(blob);
 
-
     const link =
       document.createElement('a');
-
 
     link.href = url;
 
     link.download =
       'employee-salaries.csv';
-
 
     document.body.appendChild(link);
 
@@ -792,15 +1081,12 @@ export class EmployeeListComponent
 
     document.body.removeChild(link);
 
-
     URL.revokeObjectURL(url);
-
 
     this.showSuccess(
       'CSV exported successfully.'
     );
   }
-
 
   // =========================================================
   // TEMPLATE GETTERS
@@ -811,12 +1097,10 @@ export class EmployeeListComponent
     return this.employees;
   }
 
-
   get filteredEmployees(): Employee[] {
 
     return this.employees;
   }
-
 
   get firstDisplayedEmployee(): number {
 
@@ -830,7 +1114,6 @@ export class EmployeeListComponent
     ) + 1;
   }
 
-
   get lastDisplayedEmployee(): number {
 
     return Math.min(
@@ -840,7 +1123,6 @@ export class EmployeeListComponent
       this.totalEmployees
     );
   }
-
 
   // =========================================================
   // CLEAR SEARCH
@@ -857,7 +1139,6 @@ export class EmployeeListComponent
     this.loadEmployees();
   }
 
-
   // =========================================================
   // MESSAGES
   // =========================================================
@@ -871,14 +1152,12 @@ export class EmployeeListComponent
 
     this.errorMessage = '';
 
-
     setTimeout(() => {
 
       this.successMessage = '';
 
     }, 3500);
   }
-
 
   private showError(
     message: string
@@ -889,7 +1168,6 @@ export class EmployeeListComponent
 
     this.successMessage = '';
 
-
     setTimeout(() => {
 
       this.errorMessage = '';
@@ -897,14 +1175,11 @@ export class EmployeeListComponent
     }, 5000);
   }
 
-
   private clearMessages(): void {
 
     this.errorMessage = '';
-
     this.successMessage = '';
   }
-
 
   // =========================================================
   // HELPERS
@@ -923,7 +1198,6 @@ export class EmployeeListComponent
       }
     ).format(amount);
   }
-
 
   private escapeCsv(
     value: string
@@ -944,7 +1218,6 @@ export class EmployeeListComponent
     return value;
   }
 
-
   private getErrorMessage(
     error: any,
     fallback: string
@@ -957,7 +1230,6 @@ export class EmployeeListComponent
     );
   }
 
-
   // =========================================================
   // DESTROY
   // =========================================================
@@ -965,7 +1237,6 @@ export class EmployeeListComponent
   ngOnDestroy(): void {
 
     this.destroy$.next();
-
     this.destroy$.complete();
   }
 }
