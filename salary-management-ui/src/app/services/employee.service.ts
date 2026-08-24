@@ -37,7 +37,8 @@ export interface EmployeePage {
 export class EmployeeService {
 
   private readonly apiUrl =
-    'http://localhost:8081/api/employees';
+    'https://salary-management-backend-2pgq.onrender.com/api/employees';
+    // 'http://localhost:8081/api/employees';
 
   constructor(private http: HttpClient) {}
 
