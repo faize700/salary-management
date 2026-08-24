@@ -12,12 +12,9 @@
         <span>₹</span>
       </div>
 
-      <div>
+      <div class="header-copy">
         <h1>Employee Salary Management</h1>
-
-        <p>
-          Manage employee compensation and salary insights
-        </p>
+        <p>Manage employee compensation and salary insights</p>
       </div>
 
     </div>
@@ -33,14 +30,12 @@
 
     <div class="section-heading">
 
-      <div>
-
+      <div class="section-heading-copy">
         <h2>Salary Insights</h2>
 
         <p>
           Overview of salary distribution across departments
         </p>
-
       </div>
 
 
@@ -85,6 +80,8 @@
 
     </div>
 
+
+    <!-- Report Cards -->
 
     <div class="report-cards">
 
@@ -175,7 +172,7 @@
 
 
     <!-- ===================================================
-         SUCCESS / ERROR / LOADING
+         STATUS MESSAGES
          =================================================== -->
 
     <div
@@ -184,7 +181,9 @@
 
       <span>✓</span>
 
-      {{ successMessage }}
+      <div>
+        {{ successMessage }}
+      </div>
 
     </div>
 
@@ -195,10 +194,14 @@
 
       <span>!</span>
 
-      {{ errorMessage }}
+      <div>
+        {{ errorMessage }}
+      </div>
 
     </div>
 
+
+    <!-- Loading -->
 
     <div
       *ngIf="isLoading"
@@ -209,9 +212,9 @@
     </div>
 
 
-    <!-- =====================================================
-         BULK SALARY ACTIONS
-         ===================================================== -->
+    <!-- ===================================================
+         BULK SALARY ACTION BAR
+         =================================================== -->
 
     <div
       *ngIf="selectedCount > 0"
@@ -223,7 +226,7 @@
           ✓
         </div>
 
-        <div>
+        <div class="bulk-selection-copy">
 
           <strong>
             {{ selectedCount }}
@@ -232,7 +235,7 @@
           </strong>
 
           <span>
-            Select employees from the current page
+            Selected employees from the current page
           </span>
 
         </div>
@@ -242,12 +245,20 @@
 
       <div class="bulk-action-controls">
 
-        <input
-          type="number"
-          [(ngModel)]="bulkAdjustment"
-          placeholder="Adjustment amount"
-          class="bulk-adjustment-input"
-          [disabled]="isBulkProcessing">
+        <div class="bulk-input-wrapper">
+
+          <span class="bulk-input-prefix">
+            ±
+          </span>
+
+          <input
+            type="number"
+            [(ngModel)]="bulkAdjustment"
+            placeholder="Adjustment amount"
+            class="bulk-adjustment-input"
+            [disabled]="isBulkProcessing">
+
+        </div>
 
 
         <button
@@ -291,26 +302,28 @@
 
     <div class="employee-header">
 
-
       <div class="section-title">
 
-        <h2>
-          Employee List
-        </h2>
+        <div>
+
+          <h2>
+            Employee List
+          </h2>
+
+          <p class="section-subtitle">
+            Manage employee records and compensation
+          </p>
+
+        </div>
 
         <span class="employee-count">
-
-          {{ totalEmployees | number }}
-
-          employees
-
+          {{ totalEmployees | number }} employees
         </span>
 
       </div>
 
 
       <div class="table-actions">
-
 
         <!-- Search -->
 
@@ -326,7 +339,6 @@
             (ngModelChange)="onSearchChange($event)"
             placeholder="Search employees..."
             aria-label="Search employees">
-
 
           <button
             *ngIf="searchTerm"
@@ -388,15 +400,15 @@
 
       <table class="employee-table">
 
-
-        <!-- TABLE HEADER -->
+        <!-- =================================================
+             TABLE HEADER
+             ================================================= -->
 
         <thead>
 
           <tr>
 
-
-            <!-- Select all -->
+            <!-- Select All -->
 
             <th class="selection-column">
 
@@ -420,9 +432,7 @@
               class="id-column"
               (click)="setSort('id')">
 
-              <span>
-                ID
-              </span>
+              <span>ID</span>
 
               <span
                 class="sort-indicator"
@@ -444,9 +454,7 @@
             <th
               (click)="setSort('name')">
 
-              <span>
-                Employee
-              </span>
+              <span>Employee</span>
 
               <span
                 class="sort-indicator"
@@ -468,9 +476,7 @@
             <th
               (click)="setSort('department')">
 
-              <span>
-                Department
-              </span>
+              <span>Department</span>
 
               <span
                 class="sort-indicator"
@@ -492,9 +498,7 @@
             <th
               (click)="setSort('country')">
 
-              <span>
-                Country
-              </span>
+              <span>Country</span>
 
               <span
                 class="sort-indicator"
@@ -517,9 +521,7 @@
               class="salary-column"
               (click)="setSort('salary')">
 
-              <span>
-                Salary
-              </span>
+              <span>Salary</span>
 
               <span
                 class="sort-indicator"
@@ -553,7 +555,6 @@
 
         <tbody>
 
-
           <tr
             *ngFor="let e of sortedEmployees"
             class="employee-row">
@@ -576,9 +577,7 @@
             <!-- ID -->
 
             <td class="employee-id">
-
               #{{ e.id }}
-
             </td>
 
 
@@ -639,9 +638,7 @@
 
               <div class="country-cell">
 
-                <span class="country-marker">
-                  ●
-                </span>
+                <span class="country-marker"></span>
 
                 {{ e.country }}
 
@@ -659,9 +656,13 @@
             </td>
 
 
-            <!-- Actions -->
+            <!-- =================================================
+                 ACTIONS
+                 ================================================= -->
 
-            <td>
+            <td class="actions-cell">
+
+              <!-- CRUD actions -->
 
               <div class="employee-actions">
 
@@ -672,7 +673,7 @@
                   (click)="openEditEmployeeModal(e)"
                   title="Edit employee">
 
-                  ✎
+                  <span>✎</span>
                   Edit
 
                 </button>
@@ -685,7 +686,7 @@
                   (click)="openDeleteConfirmation(e)"
                   title="Delete employee">
 
-                  ×
+                  <span>×</span>
                   Delete
 
                 </button>
@@ -693,10 +694,9 @@
               </div>
 
 
-              <!-- Salary Actions -->
+              <!-- Salary actions -->
 
               <div class="salary-actions">
-
 
                 <div class="action-group">
 
@@ -705,17 +705,14 @@
                     [(ngModel)]="e.adjustment"
                     placeholder="Amount"
                     class="salary-input"
-                    [disabled]="isUpdating">
-
+                    [disabled]="isUpdating"
+                    aria-label="Salary adjustment">
 
                   <button
                     type="button"
                     class="adjust-btn"
                     [disabled]="isUpdating"
-                    (click)="adjustSalary(
-                      e.id,
-                      e.adjustment
-                    )">
+                    (click)="adjustSalary(e.id, e.adjustment)">
 
                     Adjust
 
@@ -731,17 +728,14 @@
                     [(ngModel)]="e.newSalary"
                     placeholder="New salary"
                     class="salary-input"
-                    [disabled]="isUpdating">
-
+                    [disabled]="isUpdating"
+                    aria-label="New salary">
 
                   <button
                     type="button"
                     class="set-btn"
                     [disabled]="isUpdating"
-                    (click)="updateSalary(
-                      e.id,
-                      e.newSalary
-                    )">
+                    (click)="updateSalary(e.id, e.newSalary)">
 
                     Set Salary
 
@@ -779,14 +773,12 @@
               </h3>
 
               <p>
-                Try changing your search
-                or filter criteria.
+                Try changing your search or filter criteria.
               </p>
 
             </td>
 
           </tr>
-
 
         </tbody>
 
@@ -800,7 +792,6 @@
          ===================================================== -->
 
     <div class="table-footer">
-
 
       <div class="table-summary">
 
@@ -828,19 +819,13 @@
 
 
       <mat-paginator
-
         [length]="totalEmployees"
-
         [pageSize]="pageSize"
-
         [pageIndex]="pageIndex"
-
         [pageSizeOptions]="[5, 10, 25, 50]"
-
         (page)="onPageChange($event)">
 
       </mat-paginator>
-
 
     </div>
 
@@ -863,27 +848,39 @@
     (click)="$event.stopPropagation()">
 
 
-    <!-- Modal Header -->
+    <!-- Header -->
 
     <div class="modal-header">
 
       <div>
 
-        <h2>
-          {{
-            isEditMode
-              ? 'Edit Employee'
-              : 'Add Employee'
-          }}
-        </h2>
+        <div class="modal-title-row">
 
-        <p>
-          {{
-            isEditMode
-              ? 'Update employee information'
-              : 'Create a new employee record'
-          }}
-        </p>
+          <div class="modal-title-icon">
+            {{ isEditMode ? '✎' : '+' }}
+          </div>
+
+          <div>
+
+            <h2>
+              {{
+                isEditMode
+                  ? 'Edit Employee'
+                  : 'Add Employee'
+              }}
+            </h2>
+
+            <p>
+              {{
+                isEditMode
+                  ? 'Update employee information'
+                  : 'Create a new employee record'
+              }}
+            </p>
+
+          </div>
+
+        </div>
 
       </div>
 
@@ -902,7 +899,7 @@
     </div>
 
 
-    <!-- Modal Body -->
+    <!-- Body -->
 
     <div class="modal-body">
 
@@ -1001,9 +998,7 @@
 
         <div class="salary-form-input">
 
-          <span>
-            $
-          </span>
+          <span>$</span>
 
           <input
             id="employeeSalary"
@@ -1021,7 +1016,7 @@
     </div>
 
 
-    <!-- Modal Footer -->
+    <!-- Footer -->
 
     <div class="modal-footer">
 
@@ -1053,9 +1048,7 @@
         </span>
 
         <span *ngIf="isSavingEmployee">
-
           Saving...
-
         </span>
 
       </button>
@@ -1092,13 +1085,10 @@
 
 
     <p>
-
       Are you sure you want to delete
-
       <strong>
         {{ employeeBeingDeleted?.name }}
       </strong>?
-
     </p>
 
 
