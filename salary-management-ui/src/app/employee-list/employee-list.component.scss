@@ -1315,3 +1315,222 @@ button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* =========================================================
+   BULK SALARY ACTIONS
+   ========================================================= */
+
+.bulk-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  margin: 0 24px 16px;
+
+  padding: 14px 16px;
+
+  background: #f5f9ff;
+
+  border: 1px solid #cfe0ff;
+
+  border-radius: 8px;
+}
+
+
+/* Selection information */
+
+.bulk-selection-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bulk-check-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 34px;
+  height: 34px;
+
+  border-radius: 50%;
+
+  background: #155eef;
+
+  color: #ffffff;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.bulk-selection-info strong {
+  display: block;
+
+  color: #172b4d;
+
+  font-size: 13px;
+}
+
+.bulk-selection-info span {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #667085;
+
+  font-size: 11px;
+}
+
+
+/* Controls */
+
+.bulk-action-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bulk-adjustment-input {
+  width: 150px;
+
+  height: 34px;
+
+  padding: 0 10px;
+
+  border: 1px solid #d0d5dd;
+
+  border-radius: 6px;
+
+  background: #ffffff;
+
+  color: #344054;
+
+  font-size: 12px;
+
+  outline: none;
+}
+
+.bulk-adjustment-input:focus {
+  border-color: #155eef;
+
+  box-shadow:
+    0 0 0 3px rgba(21, 94, 239, 0.10);
+}
+
+
+.bulk-apply-btn {
+  height: 34px;
+
+  padding: 0 14px;
+
+  border: none;
+
+  border-radius: 6px;
+
+  background: #155eef;
+
+  color: #ffffff;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.bulk-apply-btn:hover:not(:disabled) {
+  background: #004eeb;
+}
+
+
+.bulk-clear-btn {
+  height: 34px;
+
+  padding: 0 12px;
+
+  border: 1px solid #d0d5dd;
+
+  border-radius: 6px;
+
+  background: #ffffff;
+
+  color: #475467;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.bulk-clear-btn:hover:not(:disabled) {
+  background: #f2f4f7;
+}
+
+
+/* =========================================================
+   CHECKBOXES
+   ========================================================= */
+
+.selection-column {
+  width: 42px;
+
+  text-align: center !important;
+}
+
+.selection-cell {
+  width: 42px;
+
+  text-align: center !important;
+}
+
+.selection-cell input,
+.selection-column input {
+  width: 15px;
+  height: 15px;
+
+  cursor: pointer;
+
+  accent-color: #155eef;
+}
+
+
+/* =========================================================
+   RESPONSIVE BULK BAR
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .bulk-action-bar {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .bulk-action-controls {
+    width: 100%;
+  }
+
+  .bulk-adjustment-input {
+    flex: 1;
+  }
+}
+
+
+@media (max-width: 600px) {
+
+  .bulk-action-controls {
+    flex-wrap: wrap;
+  }
+
+  .bulk-adjustment-input {
+    width: 100%;
+  }
+
+  .bulk-apply-btn,
+  .bulk-clear-btn {
+    flex: 1;
+  }
+  
+}

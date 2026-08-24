@@ -36,14 +36,14 @@ import {
   standalone: true,
 
   imports: [
-  FormsModule,
-  NgFor,
-  NgIf,
-  NgClass,
-  CurrencyPipe,
-  DecimalPipe,
-  MatPaginatorModule
-],
+    FormsModule,
+    NgFor,
+    NgIf,
+    NgClass,
+    CurrencyPipe,
+    DecimalPipe,
+    MatPaginatorModule
+  ],
 
   templateUrl: './employee-list.component.html',
   styleUrls: ['./employee-list.component.scss']
@@ -53,31 +53,67 @@ export class EmployeeListComponent
 
   employees: Employee[] = [];
 
+  // =========================================================
   // Pagination
+  // =========================================================
+
   pageSize = 10;
   pageIndex = 0;
 
   totalEmployees = 0;
   totalPages = 0;
 
-  // Search/filter
+
+  // =========================================================
+  // Search / Filter
+  // =========================================================
+
   searchTerm = '';
   selectedDept = '';
 
+
+  // =========================================================
   // Sorting
+  // =========================================================
+
   sortColumn = 'id';
   sortDirection: 'asc' | 'desc' = 'asc';
 
+
+  // =========================================================
   // Analytics
+  // =========================================================
+
   averageSalary = 0;
   minSalary = 0;
   maxSalary = 0;
 
-  // UI state
+
+  // =========================================================
+  // UI State
+  // =========================================================
+
   isLoading = false;
   isUpdating = false;
+
   errorMessage = '';
   successMessage = '';
+
+
+  // =========================================================
+  // Bulk Salary Operations
+  // =========================================================
+
+  selectedEmployeeIds = new Set<number>();
+
+  bulkAdjustment = 0;
+
+  isBulkProcessing = false;
+
+
+  // =========================================================
+  // RxJS
+  // =========================================================
 
   private readonly destroy$ =
     new Subject<void>();
@@ -85,9 +121,15 @@ export class EmployeeListComponent
   private readonly searchSubject =
     new Subject<string>();
 
+
   constructor(
     private employeeService: EmployeeService
   ) {}
+
+
+  // =========================================================
+  // INIT
+  // =========================================================
 
   ngOnInit(): void {
 
@@ -102,20 +144,26 @@ export class EmployeeListComponent
         this.searchTerm = search;
         this.pageIndex = 0;
 
+        this.clearSelection();
+
         this.loadEmployees();
       });
 
+
     this.loadEmployees();
+
     this.loadReports();
   }
 
-  /**
-   * Load employees using server-side
-   * pagination, filtering and sorting.
-   */
+
+  // =========================================================
+  // LOAD EMPLOYEES
+  // =========================================================
+
   loadEmployees(): void {
 
     this.isLoading = true;
+
     this.errorMessage = '';
 
     this.employeeService
@@ -170,31 +218,37 @@ export class EmployeeListComponent
       });
   }
 
-  /**
-   * Search employees.
-   *
-   * Debounced so we don't call the backend
-   * for every keystroke.
-   */
+
+  // =========================================================
+  // SEARCH
+  // =========================================================
+
   onSearchChange(value: string): void {
 
     this.searchSubject.next(value);
   }
 
-  /**
-   * Department filter.
-   */
+
+  // =========================================================
+  // DEPARTMENT
+  // =========================================================
+
   onDepartmentChange(): void {
 
     this.pageIndex = 0;
 
+    this.clearSelection();
+
     this.loadEmployees();
+
     this.loadReports();
   }
 
-  /**
-   * Server-side pagination.
-   */
+
+  // =========================================================
+  // PAGINATION
+  // =========================================================
+
   onPageChange(event: PageEvent): void {
 
     this.pageIndex =
@@ -203,12 +257,16 @@ export class EmployeeListComponent
     this.pageSize =
       event.pageSize;
 
+    this.clearSelection();
+
     this.loadEmployees();
   }
 
-  /**
-   * Server-side sorting.
-   */
+
+  // =========================================================
+  // SORTING
+  // =========================================================
+
   setSort(
     column: string
   ): void {
@@ -223,17 +281,22 @@ export class EmployeeListComponent
     } else {
 
       this.sortColumn = column;
+
       this.sortDirection = 'asc';
     }
 
     this.pageIndex = 0;
 
+    this.clearSelection();
+
     this.loadEmployees();
   }
 
-  /**
-   * Salary delta adjustment.
-   */
+
+  // =========================================================
+  // INDIVIDUAL SALARY ADJUSTMENT
+  // =========================================================
+
   adjustSalary(
     id: number,
     adjustment: number
@@ -253,17 +316,22 @@ export class EmployeeListComponent
       return;
     }
 
+
     const confirmed =
       window.confirm(
         `Apply a salary adjustment of ${this.formatAmount(adjustment)}?`
       );
 
+
     if (!confirmed) {
       return;
     }
 
+
     this.isUpdating = true;
+
     this.clearMessages();
+
 
     this.employeeService
       .adjustSalary(
@@ -284,6 +352,7 @@ export class EmployeeListComponent
           );
 
           this.loadEmployees();
+
           this.loadReports();
         },
 
@@ -301,9 +370,11 @@ export class EmployeeListComponent
       });
   }
 
-  /**
-   * Absolute salary update.
-   */
+
+  // =========================================================
+  // INDIVIDUAL ABSOLUTE SALARY UPDATE
+  // =========================================================
+
   updateSalary(
     id: number,
     newSalary: number
@@ -323,17 +394,22 @@ export class EmployeeListComponent
       return;
     }
 
+
     const confirmed =
       window.confirm(
         `Set salary to ${this.formatAmount(newSalary)}?`
       );
 
+
     if (!confirmed) {
       return;
     }
 
+
     this.isUpdating = true;
+
     this.clearMessages();
+
 
     this.employeeService
       .updateSalary(
@@ -354,6 +430,7 @@ export class EmployeeListComponent
           );
 
           this.loadEmployees();
+
           this.loadReports();
         },
 
@@ -371,9 +448,209 @@ export class EmployeeListComponent
       });
   }
 
-  /**
-   * Load salary analytics.
-   */
+
+  // =========================================================
+  // BULK SELECTION
+  // =========================================================
+
+  toggleEmployeeSelection(
+    employeeId: number
+  ): void {
+
+    if (
+      this.selectedEmployeeIds.has(employeeId)
+    ) {
+
+      this.selectedEmployeeIds.delete(
+        employeeId
+      );
+
+    } else {
+
+      this.selectedEmployeeIds.add(
+        employeeId
+      );
+    }
+  }
+
+
+  isEmployeeSelected(
+    employeeId: number
+  ): boolean {
+
+    return this.selectedEmployeeIds.has(
+      employeeId
+    );
+  }
+
+
+  toggleSelectAll(): void {
+
+    if (this.isAllPageSelected) {
+
+      this.employees.forEach(employee => {
+
+        this.selectedEmployeeIds.delete(
+          employee.id
+        );
+
+      });
+
+    } else {
+
+      this.employees.forEach(employee => {
+
+        this.selectedEmployeeIds.add(
+          employee.id
+        );
+
+      });
+    }
+  }
+
+
+  get isAllPageSelected(): boolean {
+
+    return (
+      this.employees.length > 0 &&
+      this.employees.every(
+        employee =>
+          this.selectedEmployeeIds.has(
+            employee.id
+          )
+      )
+    );
+  }
+
+
+  get selectedCount(): number {
+
+    return this.selectedEmployeeIds.size;
+  }
+
+
+  clearSelection(): void {
+
+    this.selectedEmployeeIds.clear();
+
+    this.bulkAdjustment = 0;
+  }
+
+
+  // =========================================================
+  // BULK SALARY ADJUSTMENT
+  // =========================================================
+
+  applyBulkAdjustment(): void {
+
+    if (
+      this.selectedEmployeeIds.size === 0
+    ) {
+
+      this.showError(
+        'Please select at least one employee.'
+      );
+
+      return;
+    }
+
+
+    const adjustment =
+      Number(this.bulkAdjustment);
+
+
+    if (
+      Number.isNaN(adjustment) ||
+      adjustment === 0
+    ) {
+
+      this.showError(
+        'Please enter a valid adjustment amount.'
+      );
+
+      return;
+    }
+
+
+    const selectedCount =
+      this.selectedEmployeeIds.size;
+
+
+    const confirmed =
+      window.confirm(
+        `Apply ${this.formatAmount(adjustment)} ` +
+        `salary adjustment to ${selectedCount} ` +
+        `${selectedCount === 1 ? 'employee' : 'employees'}?`
+      );
+
+
+    if (!confirmed) {
+      return;
+    }
+
+
+    this.isBulkProcessing = true;
+
+    this.isUpdating = true;
+
+    this.clearMessages();
+
+
+    this.employeeService
+      .bulkAdjustSalary(
+        Array.from(
+          this.selectedEmployeeIds
+        ),
+        adjustment
+      )
+      .pipe(
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+
+        next: response => {
+
+          this.isBulkProcessing = false;
+
+          this.isUpdating = false;
+
+
+          this.showSuccess(
+            response.message ||
+            `${response.updatedEmployees} employees updated successfully.`
+          );
+
+
+          this.clearSelection();
+
+
+          this.loadEmployees();
+
+          this.loadReports();
+        },
+
+        error: error => {
+
+          this.isBulkProcessing = false;
+
+          this.isUpdating = false;
+
+
+          this.showError(
+            this.getErrorMessage(
+              error,
+              'Unable to apply bulk salary adjustment.'
+            )
+          );
+        }
+      });
+  }
+
+
+  // =========================================================
+  // REPORTS
+  // =========================================================
+
   loadReports(): void {
 
     this.employeeService
@@ -392,6 +669,7 @@ export class EmployeeListComponent
           this.averageSalary = 0
       });
 
+
     this.employeeService
       .getMinSalary(
         this.selectedDept
@@ -407,6 +685,7 @@ export class EmployeeListComponent
         error: () =>
           this.minSalary = 0
       });
+
 
     this.employeeService
       .getMaxSalary(
@@ -425,12 +704,11 @@ export class EmployeeListComponent
       });
   }
 
-  /**
-   * Export currently loaded records.
-   *
-   * The exported data respects the current
-   * search/filter/sort/page displayed in the UI.
-   */
+
+  // =========================================================
+  // CSV EXPORT
+  // =========================================================
+
   exportToCSV(): void {
 
     if (!this.employees.length) {
@@ -442,6 +720,7 @@ export class EmployeeListComponent
       return;
     }
 
+
     const headers = [
       'ID',
       'Name',
@@ -450,21 +729,38 @@ export class EmployeeListComponent
       'Salary'
     ];
 
+
     const rows =
       this.employees.map(employee => [
+
         employee.id,
-        this.escapeCsv(employee.name),
-        this.escapeCsv(employee.department),
-        this.escapeCsv(employee.country),
+
+        this.escapeCsv(
+          employee.name
+        ),
+
+        this.escapeCsv(
+          employee.department
+        ),
+
+        this.escapeCsv(
+          employee.country
+        ),
+
         employee.salary
       ]);
 
+
     const csvContent = [
+
       headers.join(','),
+
       ...rows.map(row =>
         row.join(',')
       )
+
     ].join('\n');
+
 
     const blob =
       new Blob(
@@ -475,16 +771,20 @@ export class EmployeeListComponent
         }
       );
 
+
     const url =
       URL.createObjectURL(blob);
 
+
     const link =
       document.createElement('a');
+
 
     link.href = url;
 
     link.download =
       'employee-salaries.csv';
+
 
     document.body.appendChild(link);
 
@@ -492,48 +792,85 @@ export class EmployeeListComponent
 
     document.body.removeChild(link);
 
+
     URL.revokeObjectURL(url);
+
 
     this.showSuccess(
       'CSV exported successfully.'
     );
   }
 
-  /**
-   * The HTML already expects sortedEmployees.
-   * Since sorting now happens on the backend,
-   * this simply exposes the server response.
-   */
+
+  // =========================================================
+  // TEMPLATE GETTERS
+  // =========================================================
+
   get sortedEmployees(): Employee[] {
 
     return this.employees;
   }
 
-  /**
-   * Compatibility getter for existing template.
-   */
+
   get filteredEmployees(): Employee[] {
 
     return this.employees;
   }
 
-  /**
-   * Clear search.
-   */
+
+  get firstDisplayedEmployee(): number {
+
+    if (this.totalEmployees === 0) {
+      return 0;
+    }
+
+    return (
+      this.pageIndex *
+      this.pageSize
+    ) + 1;
+  }
+
+
+  get lastDisplayedEmployee(): number {
+
+    return Math.min(
+      (this.pageIndex + 1) *
+      this.pageSize,
+
+      this.totalEmployees
+    );
+  }
+
+
+  // =========================================================
+  // CLEAR SEARCH
+  // =========================================================
+
   clearSearch(): void {
 
     this.searchTerm = '';
+
     this.pageIndex = 0;
+
+    this.clearSelection();
 
     this.loadEmployees();
   }
+
+
+  // =========================================================
+  // MESSAGES
+  // =========================================================
 
   private showSuccess(
     message: string
   ): void {
 
-    this.successMessage = message;
+    this.successMessage =
+      message;
+
     this.errorMessage = '';
+
 
     setTimeout(() => {
 
@@ -542,12 +879,16 @@ export class EmployeeListComponent
     }, 3500);
   }
 
+
   private showError(
     message: string
   ): void {
 
-    this.errorMessage = message;
+    this.errorMessage =
+      message;
+
     this.successMessage = '';
+
 
     setTimeout(() => {
 
@@ -556,11 +897,18 @@ export class EmployeeListComponent
     }, 5000);
   }
 
+
   private clearMessages(): void {
 
     this.errorMessage = '';
+
     this.successMessage = '';
   }
+
+
+  // =========================================================
+  // HELPERS
+  // =========================================================
 
   private formatAmount(
     amount: number
@@ -576,6 +924,7 @@ export class EmployeeListComponent
     ).format(amount);
   }
 
+
   private escapeCsv(
     value: string
   ): string {
@@ -586,11 +935,15 @@ export class EmployeeListComponent
       value.includes('\n')
     ) {
 
-      return `"${value.replace(/"/g, '""')}"`;
+      return `"${value.replace(
+        /"/g,
+        '""'
+      )}"`;
     }
 
     return value;
   }
+
 
   private getErrorMessage(
     error: any,
@@ -604,29 +957,15 @@ export class EmployeeListComponent
     );
   }
 
+
+  // =========================================================
+  // DESTROY
+  // =========================================================
+
   ngOnDestroy(): void {
 
     this.destroy$.next();
+
     this.destroy$.complete();
   }
-
-  get firstDisplayedEmployee(): number {
-
-    if (this.totalEmployees === 0) {
-      return 0;
-    }
-
-    return (
-      this.pageIndex * this.pageSize
-    ) + 1;
-  }
-
-  get lastDisplayedEmployee(): number {
-
-    return Math.min(
-      (this.pageIndex + 1) * this.pageSize,
-      this.totalEmployees
-    );
-  }
-
 }

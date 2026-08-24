@@ -148,4 +148,24 @@ export class EmployeeService {
       { params }
     );
   }
+
+  bulkAdjustSalary(
+    employeeIds: number[],
+    adjustment: number
+    ): Observable<{
+    message: string;
+    updatedEmployees: number;
+    }> {
+    return this.http.post<{
+        message: string;
+        updatedEmployees: number;
+    }>(
+        `${this.apiUrl}/bulk-adjust`,
+        {
+        employeeIds,
+        adjustment
+        }
+    );
+    }
+
 }

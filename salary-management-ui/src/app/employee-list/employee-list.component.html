@@ -218,7 +218,80 @@
       <div class="loading-progress"></div>
 
     </div>
+    <!-- =====================================================
+        BULK SALARY ACTIONS
+        ===================================================== -->
 
+    <div
+    *ngIf="selectedCount > 0"
+    class="bulk-action-bar">
+
+    <div class="bulk-selection-info">
+
+        <div class="bulk-check-icon">
+        ✓
+        </div>
+
+        <div>
+
+        <strong>
+            {{ selectedCount }}
+            {{ selectedCount === 1 ? 'employee' : 'employees' }}
+            selected
+        </strong>
+
+        <span>
+            Select employees from the current page
+        </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="bulk-action-controls">
+
+        <input
+        type="number"
+        [(ngModel)]="bulkAdjustment"
+        placeholder="Adjustment amount"
+        class="bulk-adjustment-input"
+        [disabled]="isBulkProcessing">
+
+
+        <button
+        type="button"
+        class="bulk-apply-btn"
+        [disabled]="
+            isBulkProcessing ||
+            bulkAdjustment === 0
+        "
+        (click)="applyBulkAdjustment()">
+
+        <span *ngIf="!isBulkProcessing">
+            Apply Adjustment
+        </span>
+
+        <span *ngIf="isBulkProcessing">
+            Applying...
+        </span>
+
+        </button>
+
+
+        <button
+        type="button"
+        class="bulk-clear-btn"
+        [disabled]="isBulkProcessing"
+        (click)="clearSelection()">
+
+        Clear
+
+        </button>
+
+    </div>
+
+    </div>
 
     <!-- ===================================================
          EMPLOYEE HEADER
@@ -317,6 +390,17 @@
 
           <tr>
 
+            <!-- Select all -->
+            <th class="selection-column">
+
+            <input
+                type="checkbox"
+                [checked]="isAllPageSelected"
+                (change)="toggleSelectAll()"
+                [disabled]="isLoading || employees.length === 0"
+                aria-label="Select all employees on this page">
+
+            </th>
 
             <!-- ID -->
 
@@ -459,49 +543,45 @@
 
         <tbody>
 
-
-          <tr
+        <tr
             *ngFor="let e of sortedEmployees"
             class="employee-row">
 
+            <!-- Selection -->
+            <td class="selection-cell">
+
+            <input
+                type="checkbox"
+                [checked]="isEmployeeSelected(e.id)"
+                (change)="toggleEmployeeSelection(e.id)"
+                [disabled]="isUpdating"
+                [attr.aria-label]="'Select ' + e.name">
+
+            </td>
 
             <!-- ID -->
-
             <td class="employee-id">
 
-              #{{ e.id }}
+            #{{ e.id }}
 
             </td>
-
 
             <!-- Employee -->
-
             <td>
 
-              <div class="employee-info">
-
-
-                <!-- Avatar -->
+            <div class="employee-info">
 
                 <div class="avatar">
-
-                  {{ e.name.charAt(0).toUpperCase() }}
-
+                {{ e.name.charAt(0).toUpperCase() }}
                 </div>
-
-
-                <!-- Name -->
 
                 <div class="employee-name">
-
-                  {{ e.name }}
-
+                {{ e.name }}
                 </div>
 
-              </div>
+            </div>
 
             </td>
-
 
             <!-- Department -->
 
